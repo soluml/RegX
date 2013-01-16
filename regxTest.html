@@ -1,0 +1,724 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Untitled Document</title>
+<style>
+body{font:14px Verdana, Geneva, sans-serif;}
+h1{margin:0 0 20px 0;}
+label{margin:0 10px 0 0;display:inline-block;vertical-align:middle;}
+#setAll{width:100%;height:100px;margin-bottom:10px;}
+div{margin-bottom:10px; border-bottom:1px solid #000;}
+div > p{ margin:0; }
+ul{margin-bottom:30px;}
+code{display:block;font-family:monospace;}
+li code:before{content:"- ";}
+section{margin:10px 0 0 0;}
+section.mismatch{ background:#ccc; }
+section span:nth-of-type(1):before, section span:nth-of-type(2):after{display:inline-block;content:'unchecked';border:1px solid black;padding:2px;margin:5px;}
+section span:nth-of-type(1).valid:before, section span:nth-of-type(2).valid:after{background:#090;content:'valid';}
+section span:nth-of-type(1).invalid:before, section span:nth-of-type(2).invalid:after{background:#C03;content:'invalid';}
+section span:nth-of-type(1).undefined:before, section span:nth-of-type(2).undefined:after{background:#FF6;content:'undefined';}
+input, textarea, select, button{ vertical-align:middle; }
+aside span{ font-weight:bold; }
+</style>
+</head>
+<body>
+<form name="RegXFrm" id="RegXFrm" action="#" method="get">
+<header>
+  <h1>RegX Test Suite for JS Validation</h1>
+  <label for="showTests">Show Tests:</label> <select id="showTests"><option value="all">All</option></select><br/>
+  <label for="setAll">Set All Input Values</label>
+  <textarea placeholder="With this control, you can set all inputs to the same value for testing purposes. For selects, just type in the value of the option you want to select. Any value not present, automatically selects the first option. For input type=file, select a file before running the test to check validity. If you see this message, all fields have been reset." id="setAll"></textarea>
+  <label for="checkBoxes">Toggle Checkboxes and Radios</label><input type="checkbox" id="checkBoxes" />
+  <aside>Settings: 'USE_SANITATION':<span></span>, 'USE_BETTER_VALIDATION':<span></span>, 'USE_ONLOAD':<span></span>, 'USE_SERVER_VALIDATION':<span></span></aside>
+</header>
+<div id="required">
+	<h2>Required</h2>
+  <ul>
+    <li><span>HTML5:</span> Requires that the field's value not be empty</li>
+    <li>
+      <span>JS:</span> Requires that the field's value not be empty
+      <code>return (val !== '' ? false : true);</code>
+    </li>
+  </ul>
+  <section>
+  	<code>&lt;input type="text"&gt;</code>
+  	<span></span>
+    <input type="text" name="required0" />
+    <span></span>
+  </section>
+  <section>
+  	<code>&lt;input type="text" required&gt;</code>
+  	<span></span>
+    <input type="text" name="required1" required />
+    <span></span>
+  </section>
+  <section>
+  	<code>&lt;input type="text" required="required"&gt;</code>
+  	<span></span>
+    <input type="text" name="required2" required />
+    <span></span>
+  </section>
+  <section>
+  	<code>&lt;input type="checkbox" required&gt;</code>
+  	<span></span>
+    <input type="checkbox" name="required3" required />
+    <span></span>
+  </section>
+  <section>
+  	<code>&lt;input type="radio" required&gt;</code>
+  	<span></span>
+    <input type="radio" name="required4" required />
+    <span></span>
+  </section>
+  <section>
+  	<code>&lt;textarea required&gt;&lt;/textarea&gt;</code>
+  	<span></span>
+    <textarea name="required5" required></textarea>
+    <span></span>
+  </section>
+  <section>
+  	<code>&lt;select required&gt;&lt;/select&gt;</code>
+  	<span></span>
+    <select name="required6" required></select>
+    <span></span>
+  </section>
+  <section>
+  	<code>&lt;select required&gt;&lt;option&gt;Opt 1&lt;/option&gt;&lt;/select&gt;</code>
+  	<span></span>
+    <select name="required7" required><option>Opt 1</option></select>
+    <span></span>
+  </section>
+  <section>
+  	<code>&lt;select required&gt;&lt;option value=""&gt;Opt 1&lt;/option&gt;&lt;/select&gt;</code>
+  	<span></span>
+    <select name="required8" required><option value="">Opt 1</option></select>
+    <span></span>
+  </section>
+  <section>
+  	<code>&lt;select required&gt;&lt;option value=""&gt;Opt 1&lt;/option&gt;&lt;option&gt;Opt 2&lt;/option&gt;&lt;/select&gt;</code>
+  	<span></span>
+    <select name="required9" required><option value="">Opt 1</option><option>Opt 2</option></select>
+    <span></span>
+  </section>
+  <section>
+  	<code>&lt;select required&gt;&lt;option value=""&gt;Opt 1&lt;/option&gt;&lt;option value="2"&gt;Opt 2&lt;/option&gt;&lt;/select&gt;</code>
+  	<span></span>
+    <select name="required10" required><option value="">Opt 1</option><option value="2">Opt 2</option></select>
+    <span></span>
+  </section>
+  <section>
+  	<code>&lt;input type="text" required disabled&gt;</code>
+  	<span></span>
+    <input type="text" name="required11" required disabled />
+    <span></span>
+  </section>
+  <section>
+  	<code>&lt;input type="text" required readonly&gt;</code>
+  	<span></span>
+    <input type="text" name="required12" required readonly />
+    <span></span>
+  </section>
+  <section>
+  	<code>&lt;input type="button" required&gt;</code>
+  	<span></span>
+    <input type="button" name="required13" required />
+    <span></span>
+  </section>
+  <section>
+  	<code>&lt;button type="button" required&gt;&lt;/button&gt;</code>
+  	<span></span>
+    <button type="button" name="required14" required></button>
+    <span></span>
+  </section>
+  <section>
+  	<code>&lt;input type="file" required&gt;</code>
+  	<span></span>
+    <input type="file" name="required15" required />
+    <span></span>
+  </section>
+  <section>
+  	<code>&lt;input type="hidden" required&gt;</code>
+  	<span></span>
+    <input type="hidden" name="required16" required />
+    <span></span>
+  </section>
+  <section>
+  	<code>&lt;input type="image" required&gt;</code>
+  	<span></span>
+    <input type="image" name="required17" required />
+    <span></span>
+  </section>
+  <section>
+  	<code>&lt;input type="password" required&gt;</code>
+  	<span></span>
+    <input type="password" name="required18" required />
+    <span></span>
+  </section>
+  <section>
+  	<code>&lt;input type="submit" required&gt;</code>
+  	<span></span>
+    <input type="submit" name="required19" required />
+    <span></span>
+  </section>
+  <section>
+  	<code>&lt;input type="reset" required&gt;</code>
+  	<span></span>
+    <input type="reset" name="required20" required />
+    <span></span>
+  </section>
+  <section>
+  	<code>&lt;select required disabled&gt;&lt;option value=""&gt;Opt 1&lt;/option&gt;&lt;option value="2"&gt;Opt 2&lt;/option&gt;&lt;/select&gt;</code>
+  	<span></span>
+    <select name="required21" required disabled><option value="">Opt 1</option><option value="2">Opt 2</option></select>
+    <span></span>
+  </section>
+  <section>
+  	<code>&lt;select required readonly&gt;&lt;option value=""&gt;Opt 1&lt;/option&gt;&lt;option value="2"&gt;Opt 2&lt;/option&gt;&lt;/select&gt;</code>
+  	<span></span>
+    <select name="required22" required readonly><option value="">Opt 1</option><option value="2">Opt 2</option></select>
+    <span></span>
+  </section>
+</div>
+<div id="maxlength">
+	<h2>Maxlength</h2>
+  <p>*The setting RegX.USE_BETTER_VALIDATION must be set to true or else this property is ignored*</p>
+  <p>*If maxlength is specified as a float, the value is floored*</p>
+  <p>*value must be a number >= 0 or else this property is ignored*</p>
+  <ul>
+    <li><span>HTML5:</span> Requires that the field's value not exceed the character limit</li>
+    <li>
+      <span>JS:</span> Requires that the field's value not be empty
+      <code>return (val.length <= parseInt(maxlength,10) ? false : true);</code>
+    </li>
+  </ul>
+  <section>
+  	<code>&lt;input type="text" maxlength="1"&gt;</code>
+  	<span></span>
+    <input type="text" name="maxlength0" maxlength="1" />
+    <span></span>
+  </section>
+  <section>
+  	<code>&lt;input type="text" maxlength="2"&gt;</code>
+  	<span></span>
+    <input type="text" name="maxlength1" maxlength="2" />
+    <span></span>
+  </section>
+  <section>
+  	<code>&lt;input type="text" maxlength="2" required&gt;</code>
+  	<span></span>
+    <input type="text" name="maxlength2" maxlength="2" required />
+    <span></span>
+  </section>
+  <section>
+  	<code>&lt;input type="text" maxlength="" required&gt;</code>
+  	<span></span>
+    <input type="text" name="maxlength3" maxlength="" required />
+    <span></span>
+  </section>
+  <section>
+  	<code>&lt;input type="text" maxlength="asdasd" required&gt;</code>
+  	<span></span>
+    <input type="text" name="maxlength4" maxlength="asdasd" required />
+    <span></span>
+  </section>
+  <section>
+  	<code>&lt;input type="text" maxlength="-1" required&gt;</code>
+  	<span></span>
+    <input type="text" name="maxlength5" maxlength="-1" required />
+    <span></span>
+  </section>
+  <section>
+  	<code>&lt;input type="text" maxlength="2.7" required&gt;</code>
+  	<span></span>
+    <input type="text" name="maxlength6" maxlength="2.7" required />
+    <span></span>
+  </section>
+</div>
+<div id="pattern">
+	<h2>Pattern</h2>
+  <code>&lt;input type="text" pattern="RegExp"&gt;</code>
+  <p>*If specified, the attribute's value must match the JavaScript Pattern production. [ECMA262]*</p>
+  <p>*The pattern is compiled "with the global, ignoreCase, and multiline flags disabled"*</p>
+  <p>*Per spec, will not report an error if the user submits an empty string. To avoid, use in conjunction with required.*</p>
+  <p>*Pattern attribute is ignored unless input is of type:text, search, url, tel, email, or password.*</p>
+  <ul>
+    <li><span>HTML5:</span> The pattern attribute specifies a regular expression against which the control's value, or, when the multiple attribute applies and is set, the control's values, are to be checked.</li>
+    <li>
+      <span>JS:</span> Checks the pattern using the same HTML pattern. If you want/need to use modifiers, you must set an additional pattern in the XML file (or write your patterns better ;)). This is a limitation of the HTML5 spec.
+      <code>return (pattern.test(val) ? false : true);</code>
+    </li>
+    <li>
+      <span>PHP:</span> Checks the pattern using the same HTML pattern. If you want/need to use additional PCRE syntax, you must set an additional pattern in the XML file.
+      <code>return (preg_match($pattern,$val) != false ? false : true);</code>
+    </li>
+  </ul>
+  <section>
+  	<code>&lt;input type="text" pattern="[a-z]{2}"&gt;</code>
+  	<span></span>
+    <input type="text" name="pattern0" pattern="[a-z]{2}" />
+    <span></span>
+  </section>
+  <section>
+  	<code>&lt;input type="email" pattern="[a-z]{2}"&gt;</code>
+  	<span></span>
+    <input type="email" name="pattern1" pattern="[a-z]{2}" />
+    <span></span>
+  </section>
+  <section>
+  	<code>&lt;input type="url" pattern="[a-z]{2}"&gt;</code>
+  	<span></span>
+    <input type="url" name="pattern2" pattern="[a-z]{2}" />
+    <span></span>
+  </section>
+  <section>
+  	<code>&lt;input type="submit" pattern="[a-z]{2}"&gt;</code>
+  	<span></span>
+    <input type="submit" name="pattern3" pattern="[a-z]{2}" />
+    <span></span>
+  </section>
+  <section>
+  	<code>&lt;input type="email" pattern="[a-z]{2}.+"&gt;</code>
+  	<span></span>
+    <input type="email" name="pattern4" pattern="[a-z]{2}.+" />
+    <span></span>
+  </section>
+  <section>
+  	<code>&lt;input type="url" pattern="[a-z]{1}.+"&gt;</code>
+  	<span></span>
+    <input type="url" name="pattern5" pattern="[a-z]{1}.+" required />
+    <span></span>
+  </section>
+  <section>
+  	<code>&lt;input type="newtype" pattern="[a-z]{2}" required"&gt;</code>
+  	<span></span>
+    <input type="newtype" name="pattern6" pattern="[a-z]{2}" required />
+    <span></span>
+  </section>
+</div>
+<div id="color">
+	<h2>Type=color</h2>
+  <code>&lt;input type="color"&gt;</code>
+  <p>*Will not report an error if the user submits an empty string. To avoid, use in conjunction with required.*</p>
+  <p>*When the setting RegX.USE_BETTER_VALIDATION is set to true, RegX allows the use of SVG color keywords or simple colors (ex. #f00).*</p>
+  <section>
+  	<code>&lt;input type="color"&gt;</code>
+  	<span></span>
+    <input type="color" name="color0" />
+    <span></span>
+  </section>
+  <section>
+  	<code>&lt;input type="color" required&gt;</code>
+  	<span></span>
+    <input type="color" name="color1" required />
+    <span></span>
+  </section>
+</div>
+<div id="email">
+	<h2>Type=email</h2>
+  <code>&lt;input type="email"&gt;</code>
+  <p>*Will not report an error if the user submits an empty string. To avoid, use in conjunction with required.*</p>
+  <p>*When the setting RegX.USE_BETTER_VALIDATION is set to true, RegX uses a more accurate expression to validate against.*</p>
+  <ul>
+    <li><span>HTML5:</span> Requires that the field's value be an email address</li>
+    <li>
+      <span>JS:</span> Requires that the field's value be an email address
+      <code>FIELD.checkValidity()</code>
+      <code>return (/^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(val) ? false : true);</code>
+    </li>
+    <li>
+      <span>PHP:</span> Requires that the field's value be an email address
+      <code>return (preg_match("/^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/",$val) != false ? false : true);</code>
+    </li>
+  </ul>
+  <section>
+  	<code>&lt;input type="email"&gt;</code>
+  	<span></span>
+    <input type="email" name="email0" />
+    <span></span>
+  </section>
+  <section>
+  	<code>&lt;input type="email" required&gt;</code>
+  	<span></span>
+    <input type="email" name="email1" required />
+    <span></span>
+  </section>
+  <section>
+  	<code>&lt;input type="email" pattern="[a-z]{3}@.+"&gt;</code>
+  	<span></span>
+    <input type="email" name="email2" pattern="[a-z]{3}@.+" />
+    <span></span>
+  </section>
+  <section>
+  	<code>&lt;input type="email" pattern="[a-z]{3}@.+" required&gt;</code>
+  	<span></span>
+    <input type="email" name="email3" pattern="[a-z]{3}@.+" required />
+    <span></span>
+  </section>
+</div>
+<div id="number">
+	<h2>Type=number</h2>
+  <code>&lt;input type="number"&gt;</code>
+  <p>*Will not report an error if the user submits an empty string. To avoid, use in conjunction with required.*</p>
+  <section>
+  	<code>&lt;input type="number"&gt;</code>
+  	<span></span>
+    <input type="number" name="number0" />
+    <span></span>
+  </section>
+  <section>
+  	<code>&lt;input type="number" required&gt;</code>
+  	<span></span>
+    <input type="number" name="number1" required />
+    <span></span>
+  </section>
+  <section>
+  	<code>&lt;input type="number" min="2" required&gt;</code>
+  	<span></span>
+    <input type="number" name="number2" min="2" required />
+    <span></span>
+  </section>
+  <section>
+  	<code>&lt;input type="number" min="2" max="4" required&gt;</code>
+  	<span></span>
+    <input type="number" name="number3" min="2" max="4" required />
+    <span></span>
+  </section>
+  <section>
+  	<code>&lt;input type="number" min="2.1" max="4" required&gt;</code>
+  	<span></span>
+    <input type="number" name="number4" min="2.1" max="4" required />
+    <span></span>
+  </section>
+  <section>
+  	<code>&lt;input type="number" min="2.1" step="1" max="4" required&gt;</code>
+  	<span></span>
+    <input type="number" name="number5" min="2.1" step="1" max="4" required />
+    <span></span>
+  </section>
+  <section>
+  	<code>&lt;input type="number" min="2.1" step=".1" max="4" required&gt;</code>
+  	<span></span>
+    <input type="number" name="number6" min="2.1" step=".1" max="4" required />
+    <span></span>
+  </section>
+  <section>
+  	<code>&lt;input type="number" min="2.1" step=".1" max="2" required&gt;</code>
+  	<span></span>
+    <input type="number" name="number7" min="2.1" step=".1" max="2" required />
+    <span></span>
+  </section>
+  <section>
+  	<code>&lt;input type="number" min="2.1" step="1" max="4.1" required&gt;</code>
+  	<span></span>
+    <input type="number" name="number8" min="2.1" step="1" max="4.1" required />
+    <span></span>
+  </section>
+  <section>
+  	<code>&lt;input type="number" min="2.1" step="1" max="4.2" required&gt;</code>
+  	<span></span>
+    <input type="number" name="number8" min="2.1" step="1" max="4.2" required />
+    <span></span>
+  </section>
+  <section>
+  	<code>&lt;input type="number" min="2.1" step=".5" max="4.2" required&gt;</code>
+  	<span></span>
+    <input type="number" name="number8" min="2.1" step=".5" max="4.2" required />
+    <span></span>
+  </section>
+  <section>
+  	<code>&lt;input type="number" min="2.1" step=".1" max="4.2" required&gt;</code>
+  	<span></span>
+    <input type="number" name="number8" min="2.1" step=".1" max="4.2" required />
+    <span></span>
+  </section>
+</div>
+<div id="range">
+	<h2>Type=range</h2>
+  <code>&lt;input type="range"&gt;</code>
+  <p>*Will not report an error if the user submits an empty string. To avoid, use in conjunction with required.*</p>
+  <section>
+  	<code>&lt;input type="range"&gt;</code>
+  	<span></span>
+    <input type="range" name="range0" />
+    <span></span>
+  </section>
+  <section>
+  	<code>&lt;input type="range" required&gt;</code>
+  	<span></span>
+    <input type="range" name="range1" required />
+    <span></span>
+  </section>
+  <section>
+  	<code>&lt;input type="range" min="2" required&gt;</code>
+  	<span></span>
+    <input type="range" name="range2" min="2" required />
+    <span></span>
+  </section>
+  <section>
+  	<code>&lt;input type="range" min="2" max="4" required&gt;</code>
+  	<span></span>
+    <input type="range" name="range3" min="2" max="4" required />
+    <span></span>
+  </section>
+  <section>
+  	<code>&lt;input type="range" min="2.1" max="4" required&gt;</code>
+  	<span></span>
+    <input type="range" name="range4" min="2.1" max="4" required />
+    <span></span>
+  </section>
+  <section>
+  	<code>&lt;input type="range" min="2.1" step="1" max="4" required&gt;</code>
+  	<span></span>
+    <input type="range" name="range5" min="2.1" step="1" max="4" required />
+    <span></span>
+  </section>
+  <section>
+  	<code>&lt;input type="range" min="2.1" step=".1" max="4" required&gt;</code>
+  	<span></span>
+    <input type="range" name="range6" min="2.1" step=".1" max="4" required />
+    <span></span>
+  </section>
+  <section>
+  	<code>&lt;input type="range" min="2.1" step=".1" max="2" required&gt;</code>
+  	<span></span>
+    <input type="range" name="range7" min="2.1" step=".1" max="2" required />
+    <span></span>
+  </section>
+  <section>
+  	<code>&lt;input type="range" min="2.1" step="1" max="4.1" required&gt;</code>
+  	<span></span>
+    <input type="range" name="range8" min="2.1" step="1" max="4.1" required />
+    <span></span>
+  </section>
+  <section>
+  	<code>&lt;input type="range" min="2.1" step="1" max="4.2" required&gt;</code>
+  	<span></span>
+    <input type="range" name="range8" min="2.1" step="1" max="4.2" required />
+    <span></span>
+  </section>
+  <section>
+  	<code>&lt;input type="range" min="2.1" step=".5" max="4.2" required&gt;</code>
+  	<span></span>
+    <input type="range" name="range8" min="2.1" step=".5" max="4.2" required />
+    <span></span>
+  </section>
+  <section>
+  	<code>&lt;input type="range" min="2.1" step=".1" max="4.2" required&gt;</code>
+  	<span></span>
+    <input type="range" name="range8" min="2.1" step=".1" max="4.2" required />
+    <span></span>
+  </section>
+</div>
+<div id="url">
+	<h2>Type=url</h2>
+  <code>&lt;input type="url"&gt;</code>
+  <p>*Will not report an error if the user submits an empty string. To avoid, use in conjunction with required.*</p>
+  <p>*When the setting RegX.USE_BETTER_VALIDATION is set to true, RegX uses Chrome's definition to validate against.*</p>
+  <ul>
+    <li><span>HTML5:</span> Requires that the field's value be an url</li>
+    <li>
+      <span>JS:</span> Requires that the field's value be an url address
+      <code>FIELD.checkValidity()</code>
+      <code>return (/^[a-z][a-z\d+\-.]*:/i.test(val) ? false : true);</code>
+    </li>
+    <li>
+      <span>PHP:</span> Requires that the field's value be an email address
+      <code>return (preg_match("/^[a-z][a-z\d+\-.]*:/i",$val) != false ? false : true);</code>
+    </li>
+  </ul>
+  <section>
+  	<code>&lt;input type="url"&gt;</code>
+  	<span></span>
+    <input type="url" name="url0" />
+    <span></span>
+  </section>
+  <section>
+  	<code>&lt;input type="url" required&gt;</code>
+  	<span></span>
+    <input type="url" name="url1" required />
+    <span></span>
+  </section>
+  <section>
+  	<code>&lt;input type="url" pattern="[a-z]{3}.+"&gt;</code>
+  	<span></span>
+    <input type="url" name="url2" pattern="[a-z]{3}.+" />
+    <span></span>
+  </section>
+  <section>
+  	<code>&lt;input type="url" pattern="[a-z]{3}.+" required&gt;</code>
+  	<span></span>
+    <input type="url" name="url3" pattern="[a-z]{3}.+" required />
+    <span></span>
+  </section>
+</div>
+<div id="week">
+	<h2>Type=week</h2>
+  <code>&lt;input type="week"&gt;</code>
+  <p>*Will not report an error if the user submits an empty string. To avoid, use in conjunction with required.*</p>
+  <section>
+  	<code>&lt;input type="week"&gt;</code>
+  	<span></span>
+    <input type="week" name="week0" />
+    <span></span>
+  </section>
+  <section>
+  	<code>&lt;input type="week" min="sdf"&gt;</code>
+  	<span></span>
+    <input type="week" name="week1" min="sdf" />
+    <span></span>
+  </section>
+  <section>
+  	<code>&lt;input type="week" min="1986-W09" required&gt;</code>
+  	<span></span>
+    <input type="week" name="week2" min="1986-W09" required />
+    <span></span>
+  </section>
+  <section>
+  	<code>&lt;input type="week" min="1986-W09" min="1986-W10" required&gt;</code>
+  	<span></span>
+    <input type="week" name="week3" min="1986-W09" min="1986-W10" required />
+    <span></span>
+  </section>
+  <section>
+  	<code>&lt;input type="week" min="1986-W09" min="1986-W08" required&gt;</code>
+  	<span></span>
+    <input type="week" name="week3" min="1986-W09" min="1986-W08" required />
+    <span></span>
+  </section>
+  
+  
+  
+  
+  
+</div>
+
+
+
+
+
+
+
+
+
+<div>
+	<h2>Multiple</h2>
+  <code>&lt;input type="email" multiple&gt;</code> OR <code>&lt;input type="email" multiple="multiple"&gt;</code>
+  <p>*Only applies to inputs: Email and File*</p>
+  <ul>
+    <li><span>HTML5:</span> May validate the field.</li>
+    <li><span>JS:</span> Upon submission of the form, explode string by comma's and trim leading and trailing white space. Validate each value in loop.</li>
+    <li><span>PHP:</span> Upon submission of this form, loop through data array/variable validating each value, trimming whitespace.</li>
+  </ul>
+</div>
+<div>
+	<h2>Formnovalidate AND Form="novalidate"</h2>
+  <code>&lt;input type="submit" formnovalidate&gt; OR &lt;input type="submit" formnovalidate="formnovalidate"&gt;<br/>
+  &lt;form action="#" novalidate&gt; OR &lt;form action="#" novalidate="novalidate"&gt;</code>
+  <p>*The no-validate state of an element is true if the element is a submit button and the element's formnovalidate attribute is present, or if the element's form owner's novalidate attribute is present, and false otherwise.*</p>
+  <p>*Does not turn off server-side validation, for obvious reasons.*</p>
+  <ul>
+    <li><span>HTML5:</span> Upon submission of this form, ignore any validation rules.</li>
+    <li><span>JS:</span> Upon submission of this form, ignore any validation rules.</li>
+    <li><span>PHP:</span> Upon submission of this form, validate input fields.</li>
+  </ul>
+</div>
+</form>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+<script>
+//Turn of auto binding
+var RegX = {USE_ONLOAD: false};
+
+//Setup the Test
+var $allInputs  = $(':input:not(header > :input)'),
+		$checkboxes = $allInputs.filter('input:checkbox'),
+		$radios     = $allInputs.filter('input:radio'),
+		$span       = $('span'),
+		$section    = $('section'),
+		$div        = $('div');
+$('header aside').each(function(){
+	$(this).find('span:eq(0)').html((typeof RegX.USE_SANITATION === 'boolean' ? RegX.USE_SANITATION : true).toString());
+	$(this).find('span:eq(1)').html((typeof RegX.USE_BETTER_VALIDATION === 'boolean' ? RegX.USE_BETTER_VALIDATION : true).toString());
+	$(this).find('span:eq(2)').html((typeof RegX.USE_ONLOAD === 'boolean' ? RegX.USE_ONLOAD : true).toString());
+	$(this).find('span:eq(3)').html((typeof RegX.USE_SERVER_VALIDATION === 'boolean' ? RegX.USE_SERVER_VALIDATION : false).toString());
+});
+$('section').each(function(){
+	$(this).find('span:eq(0)').html('Native Browser -');
+	$(this).find('span:eq(1)').html('- RegX');
+});
+$div.each(function(){
+	var html = '';
+	if($(this).attr('id') !== undefined) html += '<option value="'+$(this).attr('id')+'">'+$(this).attr('id')+'</option>';
+	$('#showTests').append(html);
+});
+$('#showTests').change(function(){
+	var val = $(this).val();
+	$div.show();
+	if(val !== 'all') $div.filter(':not(#'+val+')').hide();
+});
+//////////
+$('#checkBoxes').change(function(){
+	if($(this).filter(':checked').length > 0){
+		$checkboxes.attr('checked', true);
+		$radios.attr('checked', true);
+	} else {
+		$checkboxes.attr('checked', false);
+		$radios.attr('checked', false);
+	}
+	$('#setAll').change();
+});
+$(':input:not(header :input)').focus(function(e){
+	e.preventDefault();
+	return false;
+});
+$('#setAll').change(function(){
+	var that = $(this);
+	$span.removeClass();
+	
+	
+	$section.removeClass('mismatch');
+	$allInputs.each(function(){
+		var $prevSpan      = $(this).prev(),
+		    $nextSpan      = $(this).next(),
+				$parentSection = $(this).parent('section');
+				
+		$(this).val(that.val());
+		
+		try{
+			switch(this.checkValidity()){
+				case true:
+					$prevSpan.addClass('valid');
+					break;
+				case false:
+					$prevSpan.addClass('invalid');
+					break;
+				default:
+					$prevSpan.addClass('undefined');
+					break;
+			}
+		} catch (err){ $prevSpan.addClass('undefined'); }
+		try{
+			switch(RegX.checkValidity(this)){
+				case true:
+					$nextSpan.addClass('valid');
+					break;
+				case false:
+					$nextSpan.addClass('invalid');
+					break;
+				default:
+					$nextSpan.addClass('undefined');
+					break;
+			}
+		} catch (err){ $nextSpan.addClass('undefined'); }
+		
+		if($parentSection.find('.invalid').length !== 2 && $parentSection.find('.valid').length !== 2){
+			$parentSection.addClass('mismatch');
+		}
+		
+	});
+});
+</script>
+<script src="RegX.js"></script>
+</body>
+</html>
