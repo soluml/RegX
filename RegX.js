@@ -13,6 +13,9 @@
 * @module RegX
 */
 var RegX = RegX || {};
+/**
+@class RegX
+*/
 (function(RegX){
 'use strict';
 /**

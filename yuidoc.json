@@ -1,0 +1,11 @@
+{
+    "name": "RegX.js Library",
+    "description": "The Foo API: a library for doing X, Y, and Z",
+    "version": "0.1.3",
+    "url": "http://regx.io/",
+    "options": {
+        "exclude": "big.js, regxTest.html, .dropbox, desktop.ini",
+        "outdir": "apidocs",
+        "paths": "*"
+    }
+}
