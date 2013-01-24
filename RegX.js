@@ -62,19 +62,10 @@ USE_ONLOAD = (RegX.USE_ONLOAD === false ? false : true),
 * @type {Boolean}
 * @default false
 */
-USE_SERVER_VALIDATION = (RegX.USE_SERVER_VALIDATION === true ? true : false);
+USE_SERVER_VALIDATION = (RegX.USE_SERVER_VALIDATION === true ? true : false),
 
 /**
-* Boolean check if there are errors in the last submitted form.
-*
-* @property isError
-* @type {Boolean}
-* @default false
-*/
-RegX.isError = false;
-
-/**
-* This array contains all field objects that pertain to fields in error from the last form submission.
+* This array contains all field objects that pertain to fields in error from the last form submission and is passed to the RegX.onFailure callback method.
 * 
 *
 * Example array with error objects:
@@ -94,11 +85,20 @@ RegX.isError = false;
 			}
 		]
 *
-* @property errors
+* @property ERRORS
 * @type {Array}
 * @default []
 */
-RegX.errors = [];
+ERRORS = [];
+
+/**
+* Boolean check if there are errors in the last submitted form.
+*
+* @property isError
+* @type {Boolean}
+* @default false
+*/
+RegX.isError = false;
 
 /**
 * On success callback method. Either this function or "onFailure" are called on form submission, depending on the results of field validity.
@@ -116,15 +116,14 @@ RegX.onSuccess = function(){};
 
 /**
 * On Failure callback method. Either this function or "onSuccess" are called on form submission, depending on the results of field validity.
-* __To access which fields contained errors, iterate over the RegX.errors object.__
+* __This callback is passed one argument, which is the ERRORS array filled with field objects.__
 *
 * You should redefine to fit your purpose:
 @example
-    RegX.onFailure = function(){
-			var i;
+		RegX.onFailure = function(errors){
 			alert('Big problems');
-			for(i = RegX.errors.length; i > 0; i--){
-				// Display message or do something with fields...
+			for(var i = errors.length; i > 0; i--){
+				console.log(e.detail.errors[i-1]);
 			}
 			return false; //Return's to the onsubmit dom event.
 		}
@@ -667,7 +666,7 @@ RegX.checkWeek = function($input){ //YYYY-"W"WW
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// RegX Private Functions //////////////////////////////////////////////////////////////////////////////////////////////////////
+// RegX Private Parts //////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
 //Get attribute value from element.
 function attr($elem, prop) {
@@ -733,7 +732,6 @@ function gregorianWeek(val) {
 	}
 	return [year, week];
 }
-
 //Utility function for checking selects in more detail for various browsers.
 //If you want to checkSelect individually, just run a checkValidity on it... same thing.
 function checkSelect($select) {
