@@ -1,0 +1,1935 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>RegX - RegX.js Library</title>
+    <link rel="stylesheet" href="http:&#x2F;&#x2F;yui.yahooapis.com&#x2F;3.8.0pr2&#x2F;build&#x2F;cssgrids&#x2F;cssgrids-min.css">
+    <link rel="stylesheet" href="..&#x2F;assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="..&#x2F;assets/css/main.css" id="site_styles">
+    <link rel="shortcut icon" type="image/png" href="..&#x2F;assets/favicon.png">
+    <script src="http:&#x2F;&#x2F;yui.yahooapis.com&#x2F;combo?3.8.0pr2&#x2F;build&#x2F;yui&#x2F;yui-min.js"></script>
+</head>
+<body class="yui3-skin-sam">
+
+<div id="doc">
+    <div id="hd" class="yui3-g header">
+        <div class="yui3-u-3-4">
+            
+                <h1><img src="..&#x2F;assets/css/logo.png" title="RegX.js Library"></h1>
+            
+        </div>
+        <div class="yui3-u-1-4 version">
+            <em>API Docs for: 0.1.3</em>
+        </div>
+    </div>
+    <div id="bd" class="yui3-g">
+
+        <div class="yui3-u-1-4">
+            <div id="docs-sidebar" class="sidebar apidocs">
+                <div id="api-list">
+    <h2 class="off-left">APIs</h2>
+    <div id="api-tabview" class="tabview">
+        <ul class="tabs">
+            <li><a href="#api-classes">Classes</a></li>
+            <li><a href="#api-modules">Modules</a></li>
+        </ul>
+
+        <div id="api-tabview-filter">
+            <input type="search" id="api-filter" placeholder="Type to filter APIs">
+        </div>
+
+        <div id="api-tabview-panel">
+            <ul id="api-classes" class="apis classes">
+            
+                <li><a href="..&#x2F;classes/RegX.html">RegX</a></li>
+            
+            </ul>
+
+            <ul id="api-modules" class="apis modules">
+            
+                <li><a href="..&#x2F;modules/RegX.html">RegX</a></li>
+            
+            </ul>
+        </div>
+    </div>
+</div>
+
+            </div>
+        </div>
+        <div class="yui3-u-3-4">
+                <div id="api-options">
+        Show:
+        <label for="api-show-inherited">
+            <input type="checkbox" id="api-show-inherited" checked>
+            Inherited
+        </label>
+
+        <label for="api-show-protected">
+            <input type="checkbox" id="api-show-protected">
+            Protected
+        </label>
+
+        <label for="api-show-private">
+            <input type="checkbox" id="api-show-private">
+            Private
+        </label>
+        <label for="api-show-deprecated">
+            <input type="checkbox" id="api-show-deprecated">
+            Deprecated
+        </label>
+
+    </div>
+
+
+            <div class="apidocs">
+                <div id="docs-main">
+                    <div class="content">
+                        <h1>RegX Class</h1>
+<div class="box meta">
+    
+
+    
+
+    
+        <div class="foundat">
+            Defined in: <a href="..&#x2F;files&#x2F;C:_Users_bens_Documents_GitHub_RegX_RegX.js.html#l17"><code>C:\Users\bens\Documents\GitHub\RegX\RegX.js:17</code></a>
+        </div>
+    
+
+    
+        
+            Module: <a href="../modules/RegX.html">RegX</a>
+        
+    
+
+    
+</div>
+
+
+
+<div class="box intro">
+    
+</div>
+
+
+
+<div id="classdocs" class="tabview">
+    <ul class="api-class-tabs">
+        <li class="api-class-tab index"><a href="#index">Index</a></li>
+
+        
+            <li class="api-class-tab methods"><a href="#methods">Methods</a></li>
+        
+        
+            <li class="api-class-tab properties"><a href="#properties">Properties</a></li>
+        
+        
+            <li class="api-class-tab attrs"><a href="#attrs">Attributes</a></li>
+        
+        
+            <li class="api-class-tab events"><a href="#events">Events</a></li>
+        
+    </ul>
+
+    <div>
+        <div id="index" class="api-class-tabpanel index">
+            <h2 class="off-left">Item Index</h2>
+
+            
+                <div class="index-section methods">
+                    <h3>Methods</h3>
+
+                    <ul class="index-list methods">
+                        
+                            <li class="index-item method">
+                                <a href="#method_checkColor">checkColor</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_checkEmail">checkEmail</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_checkMaxLength">checkMaxLength</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_checkNumber">checkNumber</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_checkPattern">checkPattern</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_checkRange">checkRange</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_checkRequired">checkRequired</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_checkURL">checkURL</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_checkValidity">checkValidity</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_checkWeek">checkWeek</a>
+
+                                
+                                
+                            </li>
+                        
+                    </ul>
+                </div>
+            
+
+            
+                <div class="index-section properties">
+                    <h3>Properties</h3>
+
+                    <ul class="index-list properties">
+                        
+                            <li class="index-item property">
+                                <a href="#property_ERRORS">ERRORS</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_isError">isError</a>
+
+                                
+                                
+                            </li>
+                        
+                    </ul>
+                </div>
+            
+
+            
+                <div class="index-section attrs">
+                    <h3>Attributes</h3>
+
+                    <ul class="index-list attrs">
+                        
+                            <li class="index-item attr private">
+                                <a href="#attr_USE_BETTER_VALIDATION">USE_BETTER_VALIDATION</a>
+                            </li>
+                        
+                            <li class="index-item attr private">
+                                <a href="#attr_USE_SANITATION">USE_SANITATION</a>
+                            </li>
+                        
+                            <li class="index-item attr private">
+                                <a href="#attr_USE_SERVER_VALIDATION">USE_SERVER_VALIDATION</a>
+                            </li>
+                        
+                    </ul>
+                </div>
+            
+
+            
+                <div class="index-section events">
+                    <h3>Events</h3>
+
+                    <ul class="index-list events">
+                        
+                            <li class="index-item event">
+                                <a href="#event_onFailure">onFailure</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item event">
+                                <a href="#event_onSuccess">onSuccess</a>
+
+                                
+                                
+                            </li>
+                        
+                    </ul>
+                </div>
+            
+        </div>
+
+        
+            <div id="methods" class="api-class-tabpanel">
+                <h2 class="off-left">Methods</h2>
+
+                
+                    <div id="method_checkColor" class="method item">
+    <h3 class="name"><code>checkColor</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>$input</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type">Boolean</span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;C:_Users_bens_Documents_GitHub_RegX_RegX.js.html#l391"><code>C:\Users\bens\Documents\GitHub\RegX\RegX.js:391</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>This function checks if the field's value is a valid color.
+<strong>The input color control shouldn't allow you to set the color to anything BUT a color.</strong>
+In a modern browser, checkValidity() should ALWAYS return true, because the default value for anything other than a valid hex color, is #000000.
+When the setting RegX.USE<em>BETTER</em>VALIDATION is set to true, RegX allows the use of SVG color keywords or simple colors (ex. aliceblue or #f00).</p>
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">$input</code>
+                        <span class="type">JQuery or DOM Element</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The input you want to check the validity of. If jQuery selector grabs more than one element, only the first element is used.</p>
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type">Boolean</span>:
+                    
+                    Returns true if element is valid and false if not.
+                
+            </div>
+        </div>
+    
+
+    
+        <div class="example">
+            <h4>Example:</h4>
+
+            <div class="example-content">
+                <p>RegX.checkColor(document.getElementById('ELEMENT_ID'));</p><p>RegX.checkColor(jQuery('input:eq(0)'));</p>
+            </div>
+        </div>
+    
+</div>
+
+                
+                    <div id="method_checkEmail" class="method item">
+    <h3 class="name"><code>checkEmail</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>$input</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type">Boolean</span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;C:_Users_bens_Documents_GitHub_RegX_RegX.js.html#l439"><code>C:\Users\bens\Documents\GitHub\RegX\RegX.js:439</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>This function checks if the field's value is a valid email address.
+Spec: http://www.w3.org/TR/html5/states-of-the-type-attribute.html#e-mail-state-type-email
+This method can use "Better Validation" based on  Arluison Guillaume's regex.</p>
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">$input</code>
+                        <span class="type">JQuery or DOM Element</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The input you want to check the validity of. If jQuery selector grabs more than one element, only the first element is used.</p>
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type">Boolean</span>:
+                    
+                    Returns true if element is valid and false if not.
+                
+            </div>
+        </div>
+    
+
+    
+        <div class="example">
+            <h4>Example:</h4>
+
+            <div class="example-content">
+                <p>RegX.checkEmail(document.getElementById('ELEMENT_ID'));</p><p>RegX.checkEmail(jQuery('input:eq(0)'));</p>
+            </div>
+        </div>
+    
+</div>
+
+                
+                    <div id="method_checkMaxLength" class="method item">
+    <h3 class="name"><code>checkMaxLength</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>$input</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type">Boolean</span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;C:_Users_bens_Documents_GitHub_RegX_RegX.js.html#l372"><code>C:\Users\bens\Documents\GitHub\RegX\RegX.js:372</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>This function checks if the field's value exceeds the max length based on it's maxlength attribute. <strong>If no maxlength attribute is supplied, this method returns false!</strong>
+If maxlength is specified as a float, the maxlength value is floored. Maxlength value must be a number >= 0 or else this property is effectively ignored.</p>
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">$input</code>
+                        <span class="type">JQuery or DOM Element</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The input you want to check the validity of. If jQuery selector grabs more than one element, only the first element is used.</p>
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type">Boolean</span>:
+                    
+                    Returns true if element is valid and false if not.
+                
+            </div>
+        </div>
+    
+
+    
+        <div class="example">
+            <h4>Example:</h4>
+
+            <div class="example-content">
+                <p>RegX.checkMaxLength(document.getElementById('ELEMENT_ID'));</p><p>RegX.checkMaxLength(jQuery('input:eq(0)'));</p>
+            </div>
+        </div>
+    
+</div>
+
+                
+                    <div id="method_checkNumber" class="method item">
+    <h3 class="name"><code>checkNumber</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>$input</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type">Boolean</span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;C:_Users_bens_Documents_GitHub_RegX_RegX.js.html#l504"><code>C:\Users\bens\Documents\GitHub\RegX\RegX.js:504</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>This function checks if the field's value is a valid number.
+Specify the min, max, and step to control which numbers are available.</p>
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">$input</code>
+                        <span class="type">JQuery or DOM Element</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The input you want to check the validity of. If jQuery selector grabs more than one element, only the first element is used.</p>
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type">Boolean</span>:
+                    
+                    Returns true if element is valid and false if not.
+                
+            </div>
+        </div>
+    
+
+    
+        <div class="example">
+            <h4>Example:</h4>
+
+            <div class="example-content">
+                <p>RegX.checkNumber(document.getElementById('ELEMENT_ID'));</p><p>RegX.checkNumber(jQuery('input:eq(0)'));</p>
+            </div>
+        </div>
+    
+</div>
+
+                
+                    <div id="method_checkPattern" class="method item">
+    <h3 class="name"><code>checkPattern</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>$input</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type">Boolean</span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;C:_Users_bens_Documents_GitHub_RegX_RegX.js.html#l352"><code>C:\Users\bens\Documents\GitHub\RegX\RegX.js:352</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>This function checks if the field is valid based on it's pattern attribute. <strong>If no pattern attribute is supplied, this method returns false!</strong>
+If specified, the attribute's value must match the JavaScript Pattern production ([ECMA262]). The pattern is compiled with the "global, ignoreCase, and multiline flags disabled".</p>
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">$input</code>
+                        <span class="type">JQuery or DOM Element</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The input you want to check the validity of. If jQuery selector grabs more than one element, only the first element is used.</p>
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type">Boolean</span>:
+                    
+                    Returns true if element is valid and false if not.
+                
+            </div>
+        </div>
+    
+
+    
+        <div class="example">
+            <h4>Example:</h4>
+
+            <div class="example-content">
+                <p>RegX.checkPattern(document.getElementById('ELEMENT_ID'));</p><p>RegX.checkPattern(jQuery('input:eq(0)'));</p>
+            </div>
+        </div>
+    
+</div>
+
+                
+                    <div id="method_checkRange" class="method item">
+    <h3 class="name"><code>checkRange</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>$input</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type">Boolean</span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;C:_Users_bens_Documents_GitHub_RegX_RegX.js.html#l594"><code>C:\Users\bens\Documents\GitHub\RegX\RegX.js:594</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>This function checks if the field's value is a valid number within a range.
+The range input seems to be a different GUI on top of the number input type. If you look at the spec for input range, no matter what value you set, the browser should auto correct it for you.
+<strong>Since the spec assumes always valid (unless somehow, you pass in a "NaN"), RegX assumes always valid (unless somehow, you pass in a "NaN").</strong> The control will literally not allow you to move outside the range.
+However, when USE<em>BETTER</em>VALIDATION is true, we treat range like a number and assume that it should be validated the same way.</p>
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">$input</code>
+                        <span class="type">JQuery or DOM Element</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The input you want to check the validity of. If jQuery selector grabs more than one element, only the first element is used.</p>
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type">Boolean</span>:
+                    
+                    Returns true if element is valid and false if not.
+                
+            </div>
+        </div>
+    
+
+    
+        <div class="example">
+            <h4>Example:</h4>
+
+            <div class="example-content">
+                <p>RegX.checkRange(document.getElementById('ELEMENT_ID'));</p><p>RegX.checkRange(jQuery('input:eq(0)'));</p>
+            </div>
+        </div>
+    
+</div>
+
+                
+                    <div id="method_checkRequired" class="method item">
+    <h3 class="name"><code>checkRequired</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>$input</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type">Boolean</span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;C:_Users_bens_Documents_GitHub_RegX_RegX.js.html#l308"><code>C:\Users\bens\Documents\GitHub\RegX\RegX.js:308</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>This function checks if the field is valid, assuming that the field IS required and only observing that fact.</p>
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">$input</code>
+                        <span class="type">JQuery or DOM Element</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The input you want to check the validity of. If jQuery selector grabs more than one element, only the first element is used.</p>
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type">Boolean</span>:
+                    
+                    Returns true if element is valid and false if not.
+                
+            </div>
+        </div>
+    
+
+    
+        <div class="example">
+            <h4>Example:</h4>
+
+            <div class="example-content">
+                <p>RegX.checkValidity(document.getElementById('ELEMENT_ID'));</p><p>RegX.checkValidity(jQuery('input:eq(0)'));</p>
+            </div>
+        </div>
+    
+</div>
+
+                
+                    <div id="method_checkURL" class="method item">
+    <h3 class="name"><code>checkURL</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>$input</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type">Boolean</span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;C:_Users_bens_Documents_GitHub_RegX_RegX.js.html#l467"><code>C:\Users\bens\Documents\GitHub\RegX\RegX.js:467</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>This function checks if the field's value is a valid URL.
+Spec: http://www.w3.org/TR/html5/states-of-the-type-attribute.html#url-state-type-url
+http://tools.ietf.org/html/rfc3986#section-3 - URI Must have a Scheme:
+    Scheme = ALPHA *( ALPHA / DIGIT / "+" / "-" / "." )
+This method can use "Better Validation" to do deeper checking for ftp and http/https (as Chrome does).</p>
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">$input</code>
+                        <span class="type">JQuery or DOM Element</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The input you want to check the validity of. If jQuery selector grabs more than one element, only the first element is used.</p>
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type">Boolean</span>:
+                    
+                    Returns true if element is valid and false if not.
+                
+            </div>
+        </div>
+    
+
+    
+        <div class="example">
+            <h4>Example:</h4>
+
+            <div class="example-content">
+                <p>RegX.checkURL(document.getElementById('ELEMENT_ID'));</p><p>RegX.checkURL(jQuery('input:eq(0)'));</p>
+            </div>
+        </div>
+    
+</div>
+
+                
+                    <div id="method_checkValidity" class="method item">
+    <h3 class="name"><code>checkValidity</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>$elem</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type">Boolean</span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;C:_Users_bens_Documents_GitHub_RegX_RegX.js.html#l152"><code>C:\Users\bens\Documents\GitHub\RegX\RegX.js:152</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p><strong>This function returns TRUE if the field is valid and FALSE if not.</strong> This mirrors native browser implementation.
+Use this if you want to see if the field is valid, taking into consideration the DOM.
+If you want to match an input's value, irregardless of whether it's immutable, use the checkRequired and check["Input"] functions.
+<strong>If you want to check individual select or textarea elements, use this function.</strong></p>
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">$elem</code>
+                        <span class="type">JQuery or DOM Element</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The field you want to check the validity of. If jQuery selector grabs more than one element, the elements are validated as a set.</p>
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type">Boolean</span>:
+                    
+                    Returns true if element is valid and false if not. If jQuery selector matches multiple elements. This method returns true if all elements are valid and false otherwise.
+                
+            </div>
+        </div>
+    
+
+    
+        <div class="example">
+            <h4>Example:</h4>
+
+            <div class="example-content">
+                <p>RegX.checkValidity(document.getElementById('ELEMENT_ID'));</p><p>RegX.checkValidity(jQuery(':input'));</p>
+            </div>
+        </div>
+    
+</div>
+
+                
+                    <div id="method_checkWeek" class="method item">
+    <h3 class="name"><code>checkWeek</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>$input</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type">Boolean</span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;C:_Users_bens_Documents_GitHub_RegX_RegX.js.html#l620"><code>C:\Users\bens\Documents\GitHub\RegX\RegX.js:620</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>This function checks if the field's value is a valid week optionally within a range.
+The week string must contain 4 digits for the year, followed by a dash, followed by a capital W, followed by two week digits, ranging from 01 to 53.
+<strong>The week input supports both a min and a max week. These strings must be valid week strings.</strong></p>
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">$input</code>
+                        <span class="type">JQuery or DOM Element</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The input you want to check the validity of. If jQuery selector grabs more than one element, only the first element is used.</p>
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type">Boolean</span>:
+                    
+                    Returns true if element is valid and false if not.
+                
+            </div>
+        </div>
+    
+
+    
+        <div class="example">
+            <h4>Example:</h4>
+
+            <div class="example-content">
+                <p>RegX.checkWeek(document.getElementById('ELEMENT_ID'));</p><p>RegX.checkWeek(jQuery('input:eq(0)'));</p>
+            </div>
+        </div>
+    
+</div>
+
+                
+            </div>
+        
+
+        
+            <div id="properties" class="api-class-tabpanel">
+                <h2 class="off-left">Properties</h2>
+
+                
+                    <div id="property_ERRORS" class="property item">
+    <h3 class="name"><code>ERRORS</code></h3>
+    <span class="type">Array</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;C:_Users_bens_Documents_GitHub_RegX_RegX.js.html#l81"><code>C:\Users\bens\Documents\GitHub\RegX\RegX.js:81</code></a>
+        
+        </p>
+
+        
+
+        
+            <p>Available since 1.0</p>
+        
+    </div>
+
+    <div class="description">
+        <p>This array contains all field objects that pertain to fields in error from the last form submission and is passed to the RegX.onFailure callback method. <strong>The ERRRORS array is only accessible inside of the callback.</strong></p>
+
+<p>Example array with error objects:</p>
+    </div>
+
+    
+        <p><strong>Default:</strong> []</p>
+    
+
+    
+        <div class="example">
+            <h4>Example:</h4>
+
+            <div class="example-content">
+                <pre class="code prettyprint"><code>    //Example ERRORS return object.
+  [
+        {
+            "name" : "name",
+            "type" : "text",
+            "value": "",
+            "msg"  : "The name field is required, this cannot be left blank."
+        },
+        {
+            "name" : "email",
+            "type" : "email",
+            "value": "test@email.",
+            "msg"  : "Your email address was not formatted correctly."
+        }
+    ]
+</code></pre>
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="property_isError" class="property item">
+    <h3 class="name"><code>isError</code></h3>
+    <span class="type">Boolean</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;C:_Users_bens_Documents_GitHub_RegX_RegX.js.html#l111"><code>C:\Users\bens\Documents\GitHub\RegX\RegX.js:111</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Boolean check if there are errors in the last submitted form.</p>
+    </div>
+
+    
+        <p><strong>Default:</strong> false</p>
+    
+
+    
+
+    
+</div>
+
+                
+            </div>
+        
+
+        
+            <div id="attrs" class="api-class-tabpanel">
+                <h2 class="off-left">Attributes</h2>
+
+                
+                    <div id="attr_USE_BETTER_VALIDATION" class="attr item private">
+    <a name="config_USE_BETTER_VALIDATION"></a> 
+    <h3 class="name"><code>USE_BETTER_VALIDATION</code></h3>
+    <span class="type">Boolean</span>
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+        <span class="flag optional">optional</span>
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;C:_Users_bens_Documents_GitHub_RegX_RegX.js.html#l40"><code>C:\Users\bens\Documents\GitHub\RegX\RegX.js:40</code></a>
+        
+        </p>
+
+        
+
+        
+            <p>Available since 1.0</p>
+        
+    </div>
+
+    <div class="description">
+        <p>The spec declares a certain way to validate all inputs. This is built in to the core of RegX. However, the spec isn't always the ideal way to validate things.
+For example, there are better regular expressions to validate an email address against.
+Another example is that for the datetime input, the spec allows for non-existant timezones: e.x. +23:59.
+Some browsers themselves opt to use better validation for fields than required in the spec, Chrome for example does a better job of validating URL's. 
+Basically, USE<em>BETTER</em>VALIDATION parameter tells RegX to be "better" than the spec.
+<strong>This parameter impacts inputs: email,url,datetime,color and any input with maxlength attribute set.</strong></p>
+    </div>
+
+    
+        <p><strong>Default:</strong> true</p>
+    
+
+    
+
+    
+        <div class="example">
+            <h4>Example:</h4>
+
+            <div class="example-content">
+                <pre class="code prettyprint"><code>    //This setting should be passed in prior to loading the .js file.
+    var RegX = {USE_BETTER_VALIDATION: false};
+    &lt;script src="RegX.js"&gt;&lt;/script&gt;
+</code></pre>
+            </div>
+        </div>
+    
+</div>
+
+                
+                    <div id="attr_USE_SANITATION" class="attr item private">
+    <a name="config_USE_SANITATION"></a> 
+    <h3 class="name"><code>USE_SANITATION</code></h3>
+    <span class="type">Boolean</span>
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+        <span class="flag optional">optional</span>
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;C:_Users_bens_Documents_GitHub_RegX_RegX.js.html#l22"><code>C:\Users\bens\Documents\GitHub\RegX\RegX.js:22</code></a>
+        
+        </p>
+
+        
+
+        
+            <p>Available since 1.0</p>
+        
+    </div>
+
+    <div class="description">
+        <p>Sanitizing our inputs means stripping out white space as the spec requires or setting replacement values for incompatible ones. Some browsers opt not to sanitize in cases where they should before validating.
+Also, some inputs only require the trimming of linebreaks (not white space), but that is dependant on the input.
+<strong>If you opt to sanitize your front end, remember that the values in the backend also need to be sanitized!</strong></p>
+    </div>
+
+    
+        <p><strong>Default:</strong> true</p>
+    
+
+    
+
+    
+        <div class="example">
+            <h4>Example:</h4>
+
+            <div class="example-content">
+                <pre class="code prettyprint"><code>    //This setting should be passed in prior to loading the .js file.
+    var RegX = {USE_SANITATION: false};
+    &lt;script src="RegX.js"&gt;&lt;/script&gt;
+</code></pre>
+            </div>
+        </div>
+    
+</div>
+
+                
+                    <div id="attr_USE_SERVER_VALIDATION" class="attr item private">
+    <a name="config_USE_SERVER_VALIDATION"></a> 
+    <h3 class="name"><code>USE_SERVER_VALIDATION</code></h3>
+    <span class="type">Boolean</span>
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+        <span class="flag optional">optional</span>
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;C:_Users_bens_Documents_GitHub_RegX_RegX.js.html#l61"><code>C:\Users\bens\Documents\GitHub\RegX\RegX.js:61</code></a>
+        
+        </p>
+
+        
+
+        
+            <p>Available since 1.0</p>
+        
+    </div>
+
+    <div class="description">
+        <p><strong><em>NOT YET IMPLEMENTED!!!!!</em></strong>
+For use in conjunction with a server side validation method.
+Instead of using JavaScript to validate on every form submission, we'll perform an ajax call to validate on the server.
+The server should return a valid RegX error object.</p>
+    </div>
+
+    
+        <p><strong>Default:</strong> false</p>
+    
+
+    
+
+    
+        <div class="example">
+            <h4>Example:</h4>
+
+            <div class="example-content">
+                <pre class="code prettyprint"><code>    //This setting should be passed in prior to loading the .js file.
+    var RegX = {USE_SERVER_VALIDATION: true};
+    &lt;script src="RegX.js"&gt;&lt;/script&gt;
+</code></pre>
+            </div>
+        </div>
+    
+</div>
+
+                
+            </div>
+        
+
+        
+            <div id="events" class="api-class-tabpanel">
+                <h2 class="off-left">Events</h2>
+
+                
+                    <div id="event_onFailure" class="events item">
+    <h3 class="name"><code>onFailure</code></h3>
+    <span class="type"></span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;C:_Users_bens_Documents_GitHub_RegX_RegX.js.html#l134"><code>C:\Users\bens\Documents\GitHub\RegX\RegX.js:134</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>On failure callback method. Either this function or "onSuccess" are called on form submission, depending on the results of field validity.
+<strong>This callback is passed one argument, which is the ERRORS array filled with field objects.</strong></p>
+
+<p>You should redefine to fit your purpose:</p>
+    </div>
+
+    
+
+
+    
+        <div class="example">
+            <h4>Example:</h4>
+
+            <div class="example-content">
+                <pre class="code prettyprint"><code>    RegX.onFailure = function(errors){
+        alert('Big problems');
+        for(var i = 0; i &lt; errors.length; i++){
+            console.log(errors[i].name);
+        }
+        return false; //Return's to the onsubmit dom event.
+    };
+</code></pre>
+            </div>
+        </div>
+    
+</div>
+
+                
+                    <div id="event_onSuccess" class="events item">
+    <h3 class="name"><code>onSuccess</code></h3>
+    <span class="type"></span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;C:_Users_bens_Documents_GitHub_RegX_RegX.js.html#l120"><code>C:\Users\bens\Documents\GitHub\RegX\RegX.js:120</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>On success callback method. Either this function or "onFailure" are called on form submission, depending on the results of field validity.</p>
+
+<p>You should redefine to fit your purpose:</p>
+    </div>
+
+    
+
+
+    
+        <div class="example">
+            <h4>Example:</h4>
+
+            <div class="example-content">
+                <pre class="code prettyprint"><code>    RegX.onSuccess = function(){
+        alert('No problems');
+        return true; //Return's to the onsubmit dom event.
+    };
+</code></pre>
+            </div>
+        </div>
+    
+</div>
+
+                
+            </div>
+        
+    </div>
+</div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="..&#x2F;assets/vendor/prettify/prettify-min.js"></script>
+<script>prettyPrint();</script>
+<script src="..&#x2F;assets/js/yui-prettify.js"></script>
+<script src="..&#x2F;assets/../api.js"></script>
+<script src="..&#x2F;assets/js/api-filter.js"></script>
+<script src="..&#x2F;assets/js/api-list.js"></script>
+<script src="..&#x2F;assets/js/api-search.js"></script>
+<script src="..&#x2F;assets/js/apidocs.js"></script>
+</body>
+</html>

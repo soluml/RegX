@@ -7,10 +7,11 @@
 * Released under the Creative Commons Attribution-ShareAlike (CC BY-SA) License.
 *
 * author:  Benjamin Solum
-* version: 0.1.3
+* version: 0.3
 * url:     http://www.soluml.com/RegX
 * source:  https://github.com/soluml/RegX
 * @module RegX
+* @main RegX
 */
 var RegX = RegX || {};
 /**
@@ -23,9 +24,16 @@ var RegX = RegX || {};
 * Also, some inputs only require the trimming of linebreaks (not white space), but that is dependant on the input.
 * __If you opt to sanitize your front end, remember that the values in the backend also need to be sanitized!__
 *
-* @property USE_SANITATION
-* @type {Boolean}
+* @attribute USE_SANITATION
+* @optional
+* @private
 * @default true
+* @since 1.0
+* @type {Boolean}
+	@example
+		//This setting should be passed in prior to loading the .js file.
+		var RegX = {USE_SANITATION: false};
+		<script src="RegX.js"></script>
 */
 var USE_SANITATION = (RegX.USE_SANITATION === false ? false : true),
 
@@ -37,40 +45,53 @@ var USE_SANITATION = (RegX.USE_SANITATION === false ? false : true),
 * Basically, USE_BETTER_VALIDATION parameter tells RegX to be "better" than the spec.
 * __This parameter impacts inputs: email,url,datetime,color and any input with maxlength attribute set.__
 *
-* @property USE_BETTER_VALIDATION
-* @type {Boolean}
+* @attribute USE_BETTER_VALIDATION
+* @optional
+* @private
 * @default true
+* @since 1.0
+* @type {Boolean}
+	@example
+		//This setting should be passed in prior to loading the .js file.
+		var RegX = {USE_BETTER_VALIDATION: false};
+		<script src="RegX.js"></script>
 */
 USE_BETTER_VALIDATION = (RegX.USE_BETTER_VALIDATION === false ? false : true),
 
 /**
-* This binds all forms on page to the formSubmit method, which checks all inputs in that particular form on form submission.
-*
-* @property USE_ONLOAD
-* @type {Boolean}
-* @default true
-*/
-USE_ONLOAD = (RegX.USE_ONLOAD === false ? false : true),
-
-/**
-* __*NOT YET IMPLEMENTED*__
+* __*NOT YET IMPLEMENTED!!!!!*__
 * For use in conjunction with a server side validation method.
 * Instead of using JavaScript to validate on every form submission, we'll perform an ajax call to validate on the server.
 * The server should return a valid RegX error object.
 *
-* @property USE_SERVER_VALIDATION
-* @type {Boolean}
+* @attribute USE_SERVER_VALIDATION
+* @beta
+* @optional
+* @private
 * @default false
+* @since 1.0
+* @type {Boolean}
+	@example
+		//This setting should be passed in prior to loading the .js file.
+		var RegX = {USE_SERVER_VALIDATION: true};
+		<script src="RegX.js"></script>
 */
 USE_SERVER_VALIDATION = (RegX.USE_SERVER_VALIDATION === true ? true : false),
 
 /**
-* This array contains all field objects that pertain to fields in error from the last form submission and is passed to the RegX.onFailure callback method.
+* This array contains all field objects that pertain to fields in error from the last form submission and is passed to the RegX.onFailure callback method. __The ERRRORS array is only accessible inside of the callback.__
 * 
 *
 * Example array with error objects:
-@example
-    [
+*
+* @property ERRORS
+* @readOnly
+* @default []
+* @since 1.0
+* @type {Array}
+	@example
+		//Example ERRORS return object.
+	  [
 			{
 				"name" : "name",
 				"type" : "text",
@@ -78,16 +99,12 @@ USE_SERVER_VALIDATION = (RegX.USE_SERVER_VALIDATION === true ? true : false),
 				"msg"  : "The name field is required, this cannot be left blank."
 			},
 			{
-				"name" :"email",
+				"name" : "email",
 				"type" : "email",
 				"value": "test@email.",
 				"msg"  : "Your email address was not formatted correctly."
 			}
 		]
-*
-* @property ERRORS
-* @type {Array}
-* @default []
 */
 ERRORS = [];
 
@@ -105,28 +122,28 @@ RegX.isError = false;
 *
 * You should redefine to fit your purpose:
 @example
-    RegX.onSuccess = function(){
+		RegX.onSuccess = function(){
 			alert('No problems');
 			return true; //Return's to the onsubmit dom event.
-		}
+		};
 *
 * @event onSuccess
 */
 RegX.onSuccess = function(){};
 
 /**
-* On Failure callback method. Either this function or "onSuccess" are called on form submission, depending on the results of field validity.
+* On failure callback method. Either this function or "onSuccess" are called on form submission, depending on the results of field validity.
 * __This callback is passed one argument, which is the ERRORS array filled with field objects.__
 *
 * You should redefine to fit your purpose:
 @example
 		RegX.onFailure = function(errors){
 			alert('Big problems');
-			for(var i = errors.length; i > 0; i--){
-				console.log(e.detail.errors[i-1]);
+			for(var i = 0; i < errors.length; i++){
+				console.log(errors[i].name);
 			}
 			return false; //Return's to the onsubmit dom event.
-		}
+		};
 *
 * @event onFailure
 */
