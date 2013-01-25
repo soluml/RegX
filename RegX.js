@@ -163,7 +163,7 @@ RegX.onFailure = function(){};
 *
 * @method checkValidity
 * @param $elem {jQuery or DOM Element} The field you want to check the validity of. If jQuery selector grabs more than one element, the elements are validated as a set.
-* @return {Boolean} Returns true if element is valid and false if not. If jQuery selector matches multiple elements. This method returns true if all elements are valid and false otherwise.
+* @return {Boolean} Returns true if element is valid and false if not. If jQuery selector or node list matches multiple elements, this method returns true if all elements are valid and false otherwise.
 */
 RegX.checkValidity = function($elem) {
 	//Checks if $elem is Dom Element or jQuery Element
@@ -180,7 +180,16 @@ RegX.checkValidity = function($elem) {
 			return true;
 		}
 	} else {
-		return checkElementValidity($elem);
+		if($elem.length === 1 || $elem.nodeName.toLowerCase() === "input"){
+			return checkElementValidity($elem);
+		} else {
+			//Check through node list
+			for(var i = $elem.length-1; i >= 0; i--){
+				//If element returns false, count the whole batch as invalid.
+				if(!checkElementValidity($elem[i])) return false;
+			}
+
+		}
 	}
 	//Checks individual field
 	function checkElementValidity($elem) {
@@ -784,6 +793,57 @@ function checkSelect($select) {
 
 	return true;
 }
+//Submit Handler
+function onSubmitRegX(e){
+	var $frm = e.target,
+			i;
+
+	//Reset Boolean Error Tracker			
+	RegX.isError = false;
+	ERRORS = [];
+
+	//Loop Through Form Elements checking each validity
+	for(i = $frm.length-1; i >= 0; i--){
+		if(!RegX.checkValidity($frm[i])){
+			//Format errors for ERRORS Array
+
+
+			
+
+
+			ERRORS.push($frm[i]);
+		}
+	}
+
+	//There were errors...
+	if(ERRORS.length > 0){
+		RegX.isError = true;
+		RegX.onFailure(ERRORS, e);
+		if(e.preventDefault) e.preventDefault();
+		return false;
+	}
+
+	RegX.onSuccess(e);
+	return true;
+}
+//Add event listeners
+function addEvent(frm){   
+  if (frm.addEventListener) {   
+    frm.addEventListener('submit', onSubmitRegX, false);    
+    return true;    
+  } else if (frm.attachEvent) {   
+    return frm.attachEvent('onsubmit', onSubmitRegX);    
+  } else {   
+    frm['onsubmit'] = onSubmitRegX;
+  }   
+}
+//Loop through and bind to each form
+function bindForms(){
+	var $forms = document.getElementsByTagName('form'),
+			i;
+	for(i = $forms.length; i > 0; i--) addEvent($forms[i-1]);
+}
+bindForms();
 })(RegX);
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // big.js Library //////////////////////////////////////////////////////////////////////////////////////////////////////////////
