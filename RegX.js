@@ -210,7 +210,7 @@ RegX.checkValidity = function($elem) {
 		else { required = true; }
 		
 		//Readonly makes these input types immutable: text, search, url, telephone, email, password, datetime, date, month, week, time, datetime-local, number
-		if(typeof readonly == 'string' || readonly === true){ readonly = true; }
+		if((typeof readonly == 'string' && readonly !== '') || readonly === true){ readonly = true; }
 		else { readonly = false; }
 		
 		//Check maxlength property as long as 'USE_BETTER_VALIDATION' is true
@@ -798,6 +798,12 @@ function onSubmitRegX(e){
 	var $frm = e.target,
 			i;
 
+	//For IE8
+	if(typeof $frm === 'undefined') $frm = e.srcElement;
+
+
+
+
 	//Reset Boolean Error Tracker			
 	RegX.isError = false;
 	ERRORS = [];
@@ -808,7 +814,7 @@ function onSubmitRegX(e){
 			//Format errors for ERRORS Array
 
 
-			
+
 
 
 			ERRORS.push($frm[i]);
