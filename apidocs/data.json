@@ -174,7 +174,7 @@
                 }
             ],
             "return": {
-                "description": "Returns true if element is valid and false if not. If jQuery selector matches multiple elements. This method returns true if all elements are valid and false otherwise.",
+                "description": "Returns true if element is valid and false if not. If jQuery selector or node list matches multiple elements, this method returns true if all elements are valid and false otherwise.",
                 "type": "Boolean"
             },
             "class": "RegX",
@@ -182,7 +182,7 @@
         },
         {
             "file": "C:\\Users\\bens\\Documents\\GitHub\\RegX\\RegX.js",
-            "line": 308,
+            "line": 317,
             "description": "This function checks if the field is valid, assuming that the field IS required and only observing that fact.",
             "example": [
                 "\n   RegX.checkValidity(document.getElementById('ELEMENT_ID'));",
@@ -206,7 +206,7 @@
         },
         {
             "file": "C:\\Users\\bens\\Documents\\GitHub\\RegX\\RegX.js",
-            "line": 352,
+            "line": 361,
             "description": "This function checks if the field is valid based on it's pattern attribute. __If no pattern attribute is supplied, this method returns false!__\nIf specified, the attribute's value must match the JavaScript Pattern production ([ECMA262]). The pattern is compiled with the \"global, ignoreCase, and multiline flags disabled\".",
             "example": [
                 "\n   RegX.checkPattern(document.getElementById('ELEMENT_ID'));",
@@ -230,7 +230,7 @@
         },
         {
             "file": "C:\\Users\\bens\\Documents\\GitHub\\RegX\\RegX.js",
-            "line": 372,
+            "line": 381,
             "description": "This function checks if the field's value exceeds the max length based on it's maxlength attribute. __If no maxlength attribute is supplied, this method returns false!__\nIf maxlength is specified as a float, the maxlength value is floored. Maxlength value must be a number >= 0 or else this property is effectively ignored.",
             "example": [
                 "\n   RegX.checkMaxLength(document.getElementById('ELEMENT_ID'));",
@@ -254,7 +254,7 @@
         },
         {
             "file": "C:\\Users\\bens\\Documents\\GitHub\\RegX\\RegX.js",
-            "line": 391,
+            "line": 400,
             "description": "This function checks if the field's value is a valid color.\n__The input color control shouldn't allow you to set the color to anything BUT a color.__\nIn a modern browser, checkValidity() should ALWAYS return true, because the default value for anything other than a valid hex color, is #000000.\nWhen the setting RegX.USE_BETTER_VALIDATION is set to true, RegX allows the use of SVG color keywords or simple colors (ex. aliceblue or #f00).",
             "example": [
                 "\n   RegX.checkColor(document.getElementById('ELEMENT_ID'));",
@@ -278,7 +278,7 @@
         },
         {
             "file": "C:\\Users\\bens\\Documents\\GitHub\\RegX\\RegX.js",
-            "line": 439,
+            "line": 448,
             "description": "This function checks if the field's value is a valid email address.\nSpec: http://www.w3.org/TR/html5/states-of-the-type-attribute.html#e-mail-state-type-email\nThis method can use \"Better Validation\" based on  Arluison Guillaume's regex.",
             "example": [
                 "\n   RegX.checkEmail(document.getElementById('ELEMENT_ID'));",
@@ -302,7 +302,7 @@
         },
         {
             "file": "C:\\Users\\bens\\Documents\\GitHub\\RegX\\RegX.js",
-            "line": 467,
+            "line": 476,
             "description": "This function checks if the field's value is a valid URL.\nSpec: http://www.w3.org/TR/html5/states-of-the-type-attribute.html#url-state-type-url\nhttp://tools.ietf.org/html/rfc3986#section-3 - URI Must have a Scheme:\n\tScheme = ALPHA *( ALPHA / DIGIT / \"+\" / \"-\" / \".\" )\nThis method can use \"Better Validation\" to do deeper checking for ftp and http/https (as Chrome does).",
             "example": [
                 "\n   RegX.checkURL(document.getElementById('ELEMENT_ID'));",
@@ -326,7 +326,7 @@
         },
         {
             "file": "C:\\Users\\bens\\Documents\\GitHub\\RegX\\RegX.js",
-            "line": 504,
+            "line": 513,
             "description": "This function checks if the field's value is a valid number.\nSpecify the min, max, and step to control which numbers are available.",
             "example": [
                 "\n   RegX.checkNumber(document.getElementById('ELEMENT_ID'));",
@@ -350,7 +350,7 @@
         },
         {
             "file": "C:\\Users\\bens\\Documents\\GitHub\\RegX\\RegX.js",
-            "line": 594,
+            "line": 603,
             "description": "This function checks if the field's value is a valid number within a range.\nThe range input seems to be a different GUI on top of the number input type. If you look at the spec for input range, no matter what value you set, the browser should auto correct it for you.\n__Since the spec assumes always valid (unless somehow, you pass in a \"NaN\"), RegX assumes always valid (unless somehow, you pass in a \"NaN\").__ The control will literally not allow you to move outside the range.\nHowever, when USE_BETTER_VALIDATION is true, we treat range like a number and assume that it should be validated the same way.",
             "example": [
                 "\n   RegX.checkRange(document.getElementById('ELEMENT_ID'));",
@@ -374,7 +374,7 @@
         },
         {
             "file": "C:\\Users\\bens\\Documents\\GitHub\\RegX\\RegX.js",
-            "line": 620,
+            "line": 629,
             "description": "This function checks if the field's value is a valid week optionally within a range.\nThe week string must contain 4 digits for the year, followed by a dash, followed by a capital W, followed by two week digits, ranging from 01 to 53.\n__The week input supports both a min and a max week. These strings must be valid week strings.__",
             "example": [
                 "\n   RegX.checkWeek(document.getElementById('ELEMENT_ID'));",
@@ -398,13 +398,13 @@
         },
         {
             "file": "C:\\Users\\bens\\Documents\\GitHub\\RegX\\RegX.js",
-            "line": 805,
+            "line": 871,
             "class": "RegX",
             "module": "RegX"
         },
         {
             "file": "C:\\Users\\bens\\Documents\\GitHub\\RegX\\RegX.js",
-            "line": 847,
+            "line": 913,
             "class": "RegX",
             "module": "RegX"
         }
@@ -412,11 +412,11 @@
     "warnings": [
         {
             "message": "Missing item type",
-            "line": " C:\\Users\\bens\\Documents\\GitHub\\RegX\\RegX.js:805"
+            "line": " C:\\Users\\bens\\Documents\\GitHub\\RegX\\RegX.js:871"
         },
         {
             "message": "Missing item type",
-            "line": " C:\\Users\\bens\\Documents\\GitHub\\RegX\\RegX.js:847"
+            "line": " C:\\Users\\bens\\Documents\\GitHub\\RegX\\RegX.js:913"
         }
     ]
 }
