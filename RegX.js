@@ -644,12 +644,12 @@ RegX.checkRange = function($input) {
 RegX.checkWeek = function($input){ //YYYY-"W"WW
 	if($input.selector !== undefined) $input = $input[0];
 
-	var val   = $input.value,
-	    max   = attr($input, 'max'),
-	    min   = attr($input, 'min'),
-			//Step base is 1970-W01
-			step  = attr($input, 'step'),
-	    regex = /^\d{4}\-W\d{2}$/;
+	var val       = $input.value,
+	    max       = attr($input, 'max'),
+	    min       = attr($input, 'min'),
+			step      = attr($input, 'step'),
+			basestep  = [1970,1], //Default step base is 1970-W01
+	    regex     = /^(\d{4})\-W(\d{2})$/;
 			
 	if(USE_SANITATION) {
 		val = trim(val);
@@ -659,24 +659,53 @@ RegX.checkWeek = function($input){ //YYYY-"W"WW
 	}
 
 	if(!regex.test(val)) return false;
-	
-	val = gregorianWeek(val);
+
+	val = gregorianWeek(val.match(regex)); //Match passes an array with three args
+
 	if(val && val.length === 2) {
-		
+
 		if(regex.test(min)) {
-			min = gregorianWeek(min);
-			if((min && min.length === 2) && (min[0] > val[0] || min[1] > val[1])) return false;
+			min = gregorianWeek(min.match(regex));
+			if((min && min.length === 2) && min[0] > val[0] || (min[0] === val[0] && min[1] > val[1])) return false;
 		}
 		
 		if(regex.test(max)) {
-			max = gregorianWeek(max);
-			if((max && max.length === 2) && (max[0] < val[0] || max[1] < val[1])) return false;
+			max = gregorianWeek(max.match(regex));
+			if((max && max.length === 2) && max[0] < val[0] || (max[0] === val[0] && max[1] < val[1])) return false;
 		}
-		
+
+		//Check Step
+		if(/^\d+$/.test(step)){
+			step = parseInt(step, 10);
+			//Determine BASESTEP
+			//basestep
+			//Determine BASESTEP
+
+			if(spanWeeks(basestep, val) % step !== 0){ return false; }
+		}
+
 		return true;
 	}
-	
+
 	return false;
+
+	function spanWeeks(base, val){
+		//Determine amount of weeks in between span of years
+		var numweeks = 0,
+		    i;
+
+		for(i = base[0]; i < val[0]; i++){
+			numweeks += (is53Weeks(i) ? 53 : 52);
+		}
+
+		//Subtract weeks you're already into base year.
+		numweeks -= base[1];
+
+		//Add weeks you haven't yet added in for the value year
+		numweeks += val[1];
+
+		return numweeks;
+	}
 };
 
 
@@ -738,25 +767,25 @@ function getMessage($elem) {
 
 // Check if the week is gregorian
 function gregorianWeek(val) {
-	val = val.split('-');
-	
-	var year = parseInt(val[0],10),
-	    week,
-			day;
+	var year = parseInt(val[1],10),
+	    week = parseInt(val[2],10);
 
-	if(1 > year) return false;
-	week = parseInt(val[1].substr(1),10);
-	
-	if(1 > week || week > 53) return false;
-	
-	if(week === 53){ //Years that Jan 1 start on Thursday even on leap year  or Leap Year where Jan 1 starts on Wednesday
-		day = new Date(year+'-01-01').getDay();
-		if(day !== 2 && day !== 3) return false;
-		
-		//Make sure year is leap year
-		if(day === 2 && (year % 400 !== 0 && (year % 100 === 0 || year % 4 !== 0))) return false;
+	if(1 > year || 1 > week || week > 53 || (week === 53 && !is53Weeks(year))){
+		return false;
 	}
+
 	return [year, week];
+}
+function is53Weeks(y){
+	//Years that Jan 1 start on Thursday even on leap year or Leap Year where Jan 1 starts on Wednesday
+	var d = new Date(y+'-01-01').getDay();
+	if(d !== 2 && d !== 3 || (d === 2 && !isLeapYear(y))){
+		return false;
+	}
+	return true;
+}
+function isLeapYear(y){
+	return !(y % 4) && (y % 100) || !(y % 400) ? true : false;
 }
 //Utility function for checking selects in more detail for various browsers.
 //If you want to checkSelect individually, just run a checkValidity on it... same thing.
