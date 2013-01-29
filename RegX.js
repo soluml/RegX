@@ -655,7 +655,7 @@ RegX.checkWeek = function($input){ //YYYY-"W"WW
 		val = trim(val);
 		if(max) max = trim(max);
 		if(min) min = trim(min);
-		if(step) min = trim(step);
+		if(step) step = trim(step);
 	}
 
 	if(!regex.test(val)) return false;
@@ -664,22 +664,24 @@ RegX.checkWeek = function($input){ //YYYY-"W"WW
 
 	if(val && val.length === 2) {
 
-		if(regex.test(min)) {
-			min = gregorianWeek(min.match(regex));
-			if((min && min.length === 2) && min[0] > val[0] || (min[0] === val[0] && min[1] > val[1])) return false;
-		}
-		
 		if(regex.test(max)) {
 			max = gregorianWeek(max.match(regex));
 			if((max && max.length === 2) && max[0] < val[0] || (max[0] === val[0] && max[1] < val[1])) return false;
+			basestep = max;
+		}
+
+		if(regex.test(min)) {
+			min = gregorianWeek(min.match(regex));
+			if((min && min.length === 2) && min[0] > val[0] || (min[0] === val[0] && min[1] > val[1])) return false;
+			basestep = min;
 		}
 
 		//Check Step
 		if(/^\d+$/.test(step)){
 			step = parseInt(step, 10);
-			//Determine BASESTEP
-			//basestep
-			//Determine BASESTEP
+			//Basestep is 1970-W01 unless the following.
+			//If max is present, it is the basestep unless min is present.
+			//If min is present, it is the basestep.
 
 			if(spanWeeks(basestep, val) % step !== 0){ return false; }
 		}
@@ -705,6 +707,25 @@ RegX.checkWeek = function($input){ //YYYY-"W"WW
 		numweeks += val[1];
 
 		return numweeks;
+	}
+	// Check if the week is gregorian
+	function gregorianWeek(val) {
+		var year = parseInt(val[1],10),
+		    week = parseInt(val[2],10);
+
+		if(1 > year || 1 > week || week > 53 || (week === 53 && !is53Weeks(year))){
+			return false;
+		}
+
+		return [year, week];
+	}
+	function is53Weeks(y){
+		//Years that Jan 1 start on Thursday even on leap year or Leap Year where Jan 1 starts on Wednesday
+		var d = new Date(y+'-01-01').getDay();
+		if(d !== 2 && d !== 3 || (d === 2 && !isLeapYear(y))){
+			return false;
+		}
+		return true;
 	}
 };
 
@@ -764,26 +785,7 @@ function getMessage($elem) {
 	
 	return '';
 }
-
-// Check if the week is gregorian
-function gregorianWeek(val) {
-	var year = parseInt(val[1],10),
-	    week = parseInt(val[2],10);
-
-	if(1 > year || 1 > week || week > 53 || (week === 53 && !is53Weeks(year))){
-		return false;
-	}
-
-	return [year, week];
-}
-function is53Weeks(y){
-	//Years that Jan 1 start on Thursday even on leap year or Leap Year where Jan 1 starts on Wednesday
-	var d = new Date(y+'-01-01').getDay();
-	if(d !== 2 && d !== 3 || (d === 2 && !isLeapYear(y))){
-		return false;
-	}
-	return true;
-}
+//Utility function for date fields to determine leap year.
 function isLeapYear(y){
 	return !(y % 4) && (y % 100) || !(y % 400) ? true : false;
 }
