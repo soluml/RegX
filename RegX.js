@@ -163,9 +163,12 @@ RegX.onFailure = function(){};
 *
 * @method checkValidity
 * @param $elem {jQuery or DOM Element} The field you want to check the validity of. If jQuery selector grabs more than one element, the elements are validated as a set.
-* @return {Boolean} Returns true if element is valid and false if not. If jQuery selector or node list matches multiple elements, this method returns true if all elements are valid and false otherwise.
+* @param returnError {Boolean} Set this to true if you want to be returned an error object versus a boolean false.
+* @return {Boolean|Object} Returns true if element is valid and false if not. If jQuery selector or node list matches multiple elements, this method returns true if all elements are valid and false otherwise. If returnError is set to true, returns true if element(s) are valid and either returns a single Object or in case of multiple elements returns an array of error objects.
 */
-RegX.checkValidity = function($elem) {
+RegX.checkValidity = function($elem, returnError) {
+	var elementsArray = [],
+	    $input;
 	//Checks if $elem is Dom Element or jQuery Element
 	if($elem.selector !== undefined){
 		if($elem.length === 1){
@@ -174,9 +177,11 @@ RegX.checkValidity = function($elem) {
 		} else {
 			//jQuery Selector returns multiple elements
 			for(var i = $elem.length-1; i >= 0; i--){
-				//If element returns false, count the whole batch as invalid.
-				if(!checkElementValidity($elem[i])) return false;
+				$input = checkElementValidity($elem[i]);
+				if(!$input){ return false; } //Mark the whole batch as false because returnError is not set.
+				else if($input !== true){ elementsArray.push($input); }
 			}
+			if(elementsArray.length > 0) return elementsArray; //If returnError is set to true, it'll return an erray of errors.
 			return true;
 		}
 	} else {
@@ -185,23 +190,26 @@ RegX.checkValidity = function($elem) {
 		} else {
 			//Check through node list
 			for(var i = $elem.length-1; i >= 0; i--){
-				//If element returns false, count the whole batch as invalid.
-				if(!checkElementValidity($elem[i])) return false;
+				$input = checkElementValidity($elem[i]);
+				if(!$input){ return false; } //Mark the whole batch as false because returnError is not set.
+				else if($input !== true){ elementsArray.push($input); }
 			}
-
+			if(elementsArray.length > 0) return elementsArray; //If returnError is set to true, it'll return an erray of errors.
+			return true;
 		}
 	}
 	//Checks individual field
 	function checkElementValidity($elem) {
 		var val       = $elem.value,
-				tag       = $elem.tagName,
-				required  = attr($elem,'required'),
-				disabled  = attr($elem,'disabled'),
-				readonly  = attr($elem,'readonly'),
-				pattern   = attr($elem,'pattern'),
-				max       = parseFloat(attr($elem, 'max')),
-				min       = parseFloat(attr($elem, 'min')),
-				maxlength = parseInt(attr($elem,'maxlength'),10);
+			tag       = $elem.tagName.toLowerCase(),
+			name      = attr($elem,'name'),
+			required  = attr($elem,'required'),
+			disabled  = attr($elem,'disabled'),
+			readonly  = attr($elem,'readonly'),
+			pattern   = attr($elem,'pattern'),
+			max       = parseFloat(attr($elem, 'max')),
+			min       = parseFloat(attr($elem, 'min')),
+			maxlength = parseInt(attr($elem,'maxlength'),10);
 				
 		//When a form element is disabled, it is immutable.
 		if(disabled === true){ return true; }
@@ -215,17 +223,21 @@ RegX.checkValidity = function($elem) {
 		
 		//Check maxlength property as long as 'USE_BETTER_VALIDATION' is true
 		if(USE_BETTER_VALIDATION && isNaN(maxlength) === false && maxlength > 0){
-			if(RegX.checkMaxLength($elem) === false) return false;
+			try{ checkMaxLength($elem); }
+			catch(e){ return formatError(e); }
 		}
 		
 		//Validate select and textarea
-		switch(tag.toLowerCase()){
+		switch(tag){
 			case 'select':
-				if(!readonly && required){ return checkSelect($elem); }
+				if(!readonly && required){
+					try{ checkSelect($elem); }
+					catch(e){ return formatError(e); }
+				}
 				return true;
 				break;
 			case 'textarea':
-				return (required && val.length === 0 ? false : true);
+				return (required && val.length === 0 ? formatError('Textarea was left empty.') : true);
 				break;
 			case 'button':
 				return true;
@@ -237,7 +249,9 @@ RegX.checkValidity = function($elem) {
 		else { pattern = true; }
 		
 		//Element Groups: http://www.w3.org/TR/2011/WD-html5-20110525/the-input-element.html#concept-input-mutable
-		switch(attr($elem,'type').toLowerCase()){
+		
+		tag = attr($elem,'type').toLowerCase(); //change input tag to type
+		switch(tag){
 			case 'hidden':
 			case 'submit':
 			case 'image':
@@ -246,22 +260,41 @@ RegX.checkValidity = function($elem) {
 				return true;
 				break;
 			case 'color':
-				return RegX.checkColor($elem);
+				if(!readonly && (required || val.length > 0)){
+					try{ checkColor($elem); }
+					catch(e){ return formatError(e); }
+				}
+				return true;
 				break;
 			case 'email':
-				if(pattern && val !== "" && !RegX.checkPattern($elem)){ return false; }
-				if(!readonly && (required || val.length > 0)){ return RegX.checkEmail($elem); }
+				if(pattern && val !== ""){
+					try{ checkPattern($elem); }
+					catch(e){ return formatError(e); }
+				}
+				if(!readonly && (required || val.length > 0)){
+					try{ checkEmail($elem); }
+					catch(e){ return formatError(e); }
+				}
 				return true;
 				break;
 			case 'url':
-				if(pattern && val !== "" && !RegX.checkPattern($elem)){ return false; }
-				if(!readonly && (required || val.length > 0)){ return RegX.checkURL($elem); }
+				if(pattern && val !== ""){
+					try{ checkPattern($elem); }
+					catch(e){ return formatError(e); }
+				}
+				if(!readonly && (required || val.length > 0)){
+					try{ checkURL($elem); }
+					catch(e){ return formatError(e); }
+				}
 				return true;
 				break;
 			case 'number':
 				//Sanitize Number Value - http://www.whatwg.org/specs/web-apps/current-work/multipage/states-of-the-type-attribute.html#number-state-(type=number)
 				if(USE_SANITATION && isNaN(parseFloat(val))){ $elem.value = ''; }
-				if(!readonly && (required || val.length > 0)){ return RegX.checkNumber($elem); }
+				if(!readonly && (required || val.length > 0)){
+					try{ checkNumber($elem); }
+					catch(e){ return formatError(e); }
+				}
 				return true;
 				break;
 			case 'range':
@@ -270,11 +303,17 @@ RegX.checkValidity = function($elem) {
 					$elem.value = min + ((max-min) / 2);
 					if(max < min){ $elem.value = min; }
 				}
-				if(required || val.length > 0){ return RegX.checkRange($elem); }
+				if(required || val.length > 0){
+					try{ checkRange($elem); }
+					catch(e){ return formatError(e); }
+				}
 				return true;
 				break;
 			case 'week':
-				if(!readonly && (required || val.length > 0)){ return RegX.checkWeek($elem); }
+				if(!readonly && (required || val.length > 0)){
+					try{ checkWeek($elem); }
+					catch(e){ return formatError(e); }
+				}
 				return true;
 				break;
 			/*
@@ -302,14 +341,28 @@ RegX.checkValidity = function($elem) {
 			case 'checkbox':
 			case 'radio':
 			case 'file':
-				if(required){ return RegX.checkRequired($elem); }
+				if(required){
+					try{ checkRequired($elem); }
+					catch(e){ return formatError(e); }
+				}
 				return true;
 				break;
 			default: //'Text', 'Search', Telephone, 'Password', and any non spec types
-				if(pattern && val !== "" && !RegX.checkPattern($elem)){ return false; }
-				if(!readonly && required){ return RegX.checkRequired($elem); }
+				if(pattern && val !== ""){
+					try{ checkPattern($elem); }
+					catch(e){ return formatError(e); }
+				}
+				if(!readonly && required){
+					try{ checkRequired($elem); }
+					catch(e){ return formatError(e); }
+				}
 				return true;
 				break;
+		}
+		//Format the error for returning.
+		function formatError(e){
+			if(returnError){ return {"name": name, "type": tag, "value": val, "msg": getMessage($elem), "error_msg": e}; }
+			return false;
 		}
 	}
 };
@@ -327,11 +380,11 @@ RegX.checkValidity = function($elem) {
 * @param $input {jQuery or DOM Element} The input you want to check the validity of. If jQuery selector grabs more than one element, only the first element is used.
 * @return {Boolean} Returns true if element is valid and false if not.
 */
-RegX.checkRequired = function($input) {
+function checkRequired($input) {
 	if($input.selector !== undefined) $input = $input[0];
 	switch(attr($input,'type')) {
 		case 'checkbox':
-			return $input.checked;
+			if(!$input.checked){ throw 'Checkbox was left unchecked.'; }
 			break;
 		case 'radio':
 			var radioName = $input.getAttribute('name'),
@@ -347,13 +400,13 @@ RegX.checkRequired = function($input) {
 			}
 			for(i = 0; i < radioGroup.length; i++) {
 				if(radioGroup[i].checked){
-					return true;
+					return;
 				}
 			}
-			return false;
+			throw 'A radio option was not checked.';
 			break;
 		default:
-			return (trim($input.value, true).length !== 0 ? true : false);
+			if(trim($input.value, true).length === 0){ throw 'There was no value for this field.'; }
 			break;
 	}
 };
@@ -372,10 +425,11 @@ RegX.checkRequired = function($input) {
 * @param $input {jQuery or DOM Element} The input you want to check the validity of. If jQuery selector grabs more than one element, only the first element is used.
 * @return {Boolean} Returns true if element is valid and false if not.
 */
-RegX.checkPattern =function($input) {
+function checkPattern($input) {
 	if($input.selector !== undefined) $input = $input[0];
 	var pattern = new RegExp('^(?:'+attr($input,'pattern')+')$');
-	return (pattern.test($input.value) ? true : false);
+	if(!pattern.test($input.value)){ throw 'The value does not match the pattern: "'+ pattern +'".'; }
+	return;
 };
 
 /**
@@ -392,11 +446,46 @@ RegX.checkPattern =function($input) {
 * @param $input {jQuery or DOM Element} The input you want to check the validity of. If jQuery selector grabs more than one element, only the first element is used.
 * @return {Boolean} Returns true if element is valid and false if not.
 */
-RegX.checkMaxLength = function($input) {
-	if($input.selector !== undefined) $input = $input[0];
-	return ($input.value.length <= parseInt(attr($input,'maxLength'),10) ? true : false);
-};
+function checkMaxLength($input) {
+	if($input.selector !== undefined){ $input = $input[0]; }
+	//if($input.value.length <= parseInt(attr($input,'maxLength'),10){
+		//return true;
+	//} else {
+		//throw 'The value exceeds the maxlength attribute.';
+	//}
 
+
+	if($input.value.length > parseInt(attr($input,'maxLength'),10)){
+		throw 'The value exceeds the maxlength attribute.';
+	}
+
+}
+//Utility function for checking selects in more detail for various browsers.
+function checkSelect($select) {
+	if($select.selector !== undefined) $select = $select[0];
+	
+	var placeholderOptionVal; // value of placeholder
+	
+	// If the element has its required attribute specified, and either none of the option elements in the select element's list of options have their selectedness set to true, or the only option element in the select element's list of options with its selectedness set to true is the placeholder label option, then the element is suffering from being missing.
+	
+	//On submission the select input MUST have a value selected.
+	if($select.selectedIndex < 0){ throw 'An option was not selected.'; }
+	
+	//If selected element value is placeholder label option...
+	if($select.value === ''){
+		//In older versions of IE, if the value attribute isn't set on the option, the value will be empty string in the DOM, but will still send a value to the server.
+		//The trick is determining IF the value truly is empty (which is an error) or if IE just thinks it is (not an error)
+		
+		//Check for other browsers
+		placeholderOptionVal = attr($select.options[0], 'value');
+		//Check if var is "specified" in IE
+		if($select.options[0].attributes.value && !$select.options[0].attributes.value.specified){
+			if(trim($select.options[0].innerHTML) === ''){ throw 'No value was specified.'; }
+		} else {
+			if(placeholderOptionVal === '' || (placeholderOptionVal === null && trim($select.options[0].innerHTML) === '')){ throw 'No value was specified.'; }
+		}	
+	}
+}
 /**
 * This function checks if the field's value is a valid color.
 * __The input color control shouldn't allow you to set the color to anything BUT a color.__
@@ -413,35 +502,36 @@ RegX.checkMaxLength = function($input) {
 * @param $input {jQuery or DOM Element} The input you want to check the validity of. If jQuery selector grabs more than one element, only the first element is used.
 * @return {Boolean} Returns true if element is valid and false if not.
 */
-RegX.checkColor = function($input) {
+function checkColor($input) {
 	if($input.selector !== undefined) $input = $input[0];
 	
 	var val = $input.value,
 	regex = /^#[a-f0-9]{6}$/i;
 	
 	if(regex.test(val)) {
-		return true;
-	}
-	else {
+		return;
+	} else {
 		if(!USE_BETTER_VALIDATION || val.length === 0){
-			return false;
+			throw 'This is not a valid hex color. e.g. "#FF0000"';
+		} else if(val.length === 0){
+			throw 'This field is empty.';
 		}
 		
 		//Do Legacy Color Value Parser
 		val = trim(val);
 		if(val.toLowerCase() === 'transparent'){
-			return false;
+			throw 'This is not a valid hex color. e.g. "#FF0000"';
 		}
 		
 		//Check SVG color keywords
-		if(val === 'aliceblue' || val === 'antiquewhite' || val === 'aqua' || val === 'aquamarine' || val === 'azure' || val === 'beige' || val === 'bisque' || val === 'black' || val === 'blanchedalmond' || val === 'blue' || val === 'blueviolet' || val === 'brown' || val === 'burlywood' || val === 'cadetblue' || val === 'chartreuse' || val === 'chocolate' || val === 'coral' || val === 'cornflowerblue' || val === 'cornsilk' || val === 'crimson' || val === 'cyan' || val === 'darkblue' || val === 'darkcyan' || val === 'darkgoldenrod' || val === 'darkgray' || val === 'darkgreen' || val === 'darkgrey' || val === 'darkkhaki' || val === 'darkmagenta' || val === 'darkolivegreen' || val === 'darkorange' || val === 'darkorchid' || val === 'darkred' || val === 'darksalmon' || val === 'darkseagreen' || val === 'darkslateblue' || val === 'darkslategray' || val === 'darkslategrey' || val === 'darkturquoise' || val === 'darkviolet' || val === 'deeppink' || val === 'deepskyblue' || val === 'dimgray' || val === 'dimgrey' || val === 'dodgerblue' || val === 'firebrick' || val === 'floralwhite' || val === 'forestgreen' || val === 'fuchsia' || val === 'gainsboro' || val === 'ghostwhite' || val === 'gold' || val === 'goldenrod' || val === 'gray' || val === 'green' || val === 'greenyellow' || val === 'grey' || val === 'honeydew' || val === 'hotpink' || val === 'indianred' || val === 'indigo' || val === 'ivory' || val === 'khaki' || val === 'lavender' || val === 'lavenderblush' || val === 'lawngreen' || val === 'lemonchiffon' || val === 'lightblue' || val === 'lightcoral' || val === 'lightcyan' || val === 'lightgoldenrodyellow' || val === 'lightgray' || val === 'lightgreen' || val === 'lightgrey' || val === 'lightpink' || val === 'lightsalmon' || val === 'lightseagreen' || val === 'lightskyblue' || val === 'lightslategray' || val === 'lightslategrey' || val === 'lightsteelblue' || val === 'lightyellow' || val === 'lime' || val === 'limegreen' || val === 'linen' || val === 'magenta' || val === 'maroon' || val === 'mediumaquamarine' || val === 'mediumblue' || val === 'mediumorchid' || val === 'mediumpurple' || val === 'mediumseagreen' || val === 'mediumslateblue' || val === 'mediumspringgreen' || val === 'mediumturquoise' || val === 'mediumvioletred' || val === 'midnightblue' || val === 'mintcream' || val === 'mistyrose' || val === 'moccasin' || val === 'navajowhite' || val === 'navy' || val === 'oldlace' || val === 'olive' || val === 'olivedrab' || val === 'orange' || val === 'orangered' || val === 'orchid' || val === 'palegoldenrod' || val === 'palegreen' || val === 'paleturquoise' || val === 'palevioletred' || val === 'papayawhip' || val === 'peachpuff' || val === 'peru' || val === 'pink' || val === 'plum' || val === 'powderblue' || val === 'purple' || val === 'red' || val === 'rosybrown' || val === 'royalblue' || val === 'saddlebrown' || val === 'salmon' || val === 'sandybrown' || val === 'seagreen' || val === 'seashell' || val === 'sienna' || val === 'silver' || val === 'skyblue' || val === 'slateblue' || val === 'slategray' || val === 'slategrey' || val === 'snow' || val === 'springgreen' || val === 'steelblue' || val === 'tan' || val === 'teal' || val === 'thistle' || val === 'tomato' || val === 'turquoise' || val === 'violet' || val === 'wheat' || val === 'white' || val === 'whitesmoke' || val === 'yellow' || val === 'yellowgreen'){ return true; }
+		if(val === 'aliceblue' || val === 'antiquewhite' || val === 'aqua' || val === 'aquamarine' || val === 'azure' || val === 'beige' || val === 'bisque' || val === 'black' || val === 'blanchedalmond' || val === 'blue' || val === 'blueviolet' || val === 'brown' || val === 'burlywood' || val === 'cadetblue' || val === 'chartreuse' || val === 'chocolate' || val === 'coral' || val === 'cornflowerblue' || val === 'cornsilk' || val === 'crimson' || val === 'cyan' || val === 'darkblue' || val === 'darkcyan' || val === 'darkgoldenrod' || val === 'darkgray' || val === 'darkgreen' || val === 'darkgrey' || val === 'darkkhaki' || val === 'darkmagenta' || val === 'darkolivegreen' || val === 'darkorange' || val === 'darkorchid' || val === 'darkred' || val === 'darksalmon' || val === 'darkseagreen' || val === 'darkslateblue' || val === 'darkslategray' || val === 'darkslategrey' || val === 'darkturquoise' || val === 'darkviolet' || val === 'deeppink' || val === 'deepskyblue' || val === 'dimgray' || val === 'dimgrey' || val === 'dodgerblue' || val === 'firebrick' || val === 'floralwhite' || val === 'forestgreen' || val === 'fuchsia' || val === 'gainsboro' || val === 'ghostwhite' || val === 'gold' || val === 'goldenrod' || val === 'gray' || val === 'green' || val === 'greenyellow' || val === 'grey' || val === 'honeydew' || val === 'hotpink' || val === 'indianred' || val === 'indigo' || val === 'ivory' || val === 'khaki' || val === 'lavender' || val === 'lavenderblush' || val === 'lawngreen' || val === 'lemonchiffon' || val === 'lightblue' || val === 'lightcoral' || val === 'lightcyan' || val === 'lightgoldenrodyellow' || val === 'lightgray' || val === 'lightgreen' || val === 'lightgrey' || val === 'lightpink' || val === 'lightsalmon' || val === 'lightseagreen' || val === 'lightskyblue' || val === 'lightslategray' || val === 'lightslategrey' || val === 'lightsteelblue' || val === 'lightyellow' || val === 'lime' || val === 'limegreen' || val === 'linen' || val === 'magenta' || val === 'maroon' || val === 'mediumaquamarine' || val === 'mediumblue' || val === 'mediumorchid' || val === 'mediumpurple' || val === 'mediumseagreen' || val === 'mediumslateblue' || val === 'mediumspringgreen' || val === 'mediumturquoise' || val === 'mediumvioletred' || val === 'midnightblue' || val === 'mintcream' || val === 'mistyrose' || val === 'moccasin' || val === 'navajowhite' || val === 'navy' || val === 'oldlace' || val === 'olive' || val === 'olivedrab' || val === 'orange' || val === 'orangered' || val === 'orchid' || val === 'palegoldenrod' || val === 'palegreen' || val === 'paleturquoise' || val === 'palevioletred' || val === 'papayawhip' || val === 'peachpuff' || val === 'peru' || val === 'pink' || val === 'plum' || val === 'powderblue' || val === 'purple' || val === 'red' || val === 'rosybrown' || val === 'royalblue' || val === 'saddlebrown' || val === 'salmon' || val === 'sandybrown' || val === 'seagreen' || val === 'seashell' || val === 'sienna' || val === 'silver' || val === 'skyblue' || val === 'slateblue' || val === 'slategray' || val === 'slategrey' || val === 'snow' || val === 'springgreen' || val === 'steelblue' || val === 'tan' || val === 'teal' || val === 'thistle' || val === 'tomato' || val === 'turquoise' || val === 'violet' || val === 'wheat' || val === 'white' || val === 'whitesmoke' || val === 'yellow' || val === 'yellowgreen'){ return; }
 		
 		//Check simple color
-		if(val.length === 4){
-			return (/^#[a-f0-9]{3}$/i.test(val) ? true : false);
+		if(val.length === 4 && /^#[a-f0-9]{3}$/i.test(val)){
+			return;
 		}
 		
-		return false;
+		throw 'This is not a valid hex color. e.g. "#FF0000"';
 	}
 };
 
@@ -460,7 +550,7 @@ RegX.checkColor = function($input) {
 * @param $input {jQuery or DOM Element} The input you want to check the validity of. If jQuery selector grabs more than one element, only the first element is used.
 * @return {Boolean} Returns true if element is valid and false if not.
 */
-RegX.checkEmail = function($input) {
+function checkEmail($input) {
 	if($input.selector !== undefined) $input = $input[0];
 	
 	var email = trim($input.value),
@@ -470,7 +560,10 @@ RegX.checkEmail = function($input) {
 		regex = /^[-a-z0-9~!$%^&*_=+}{\'?]+(\.[-a-z0-9~!$%^&*_=+}{\'?]+)*@([a-z0-9_][-a-z0-9_]*(\.[-a-z0-9_]+)*\.(aero|arpa|biz|com|coop|edu|gov|info|int|mil|museum|name|net|org|pro|travel|mobi|xxx|[a-z][a-z])|([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}))(:[0-9]{1,5})?$/i;
 	} //'
 	
-	return (regex.test(email) ? true : false);
+	if(!regex.test(email)){
+		throw 'This is not a valid email address.';	
+	}
+	return;
 };
 
 /**
@@ -490,13 +583,13 @@ RegX.checkEmail = function($input) {
 * @param $input {jQuery or DOM Element} The input you want to check the validity of. If jQuery selector grabs more than one element, only the first element is used.
 * @return {Boolean} Returns true if element is valid and false if not.
 */
-RegX.checkURL = function($input) {
+function checkURL($input) {
 	if($input.selector !== undefined) $input = $input[0];
 	
 	//Scheme = ALPHA *( ALPHA / DIGIT / "+" / "-" / "." )
 	var url = trim($input.value);
 	if(!/^[a-z][a-z\d+\-.]*:/i.test(url)) { //Global Scheme Check for Firefox, Safari, Opera and Chrome
-		 return false;
+		 throw 'This is not a valid URL.';
 	}
 	//Path can be empty.
 	//On Chrome, path cannot be empty for ftp, http, or https.
@@ -504,10 +597,10 @@ RegX.checkURL = function($input) {
 		//Google Does not like these chars in url: @~=;[]%^
 		//Google Does not like these additional chars after authority path-abempty: :#\/
 		if(!/^(ftp|https?):(\/\/[^\/:#\\@~=;\[\]%\^][^@~=;\[\]%\^]*|\/[^\/:#\\@~=;\[\]%\^][^@~=;\[\]%\^]*|[^\/:#\\@~=;\[\]%\^][^\/@~=;\[\]%\^]*[^@~=;\[\]%\^]*)$/i.test(url)) {
-			return false;
+			throw 'This is not a valid URL.';
 		}
 	}
-	return true;
+	return;
 };
 
 /**
@@ -524,7 +617,7 @@ RegX.checkURL = function($input) {
 * @param $input {jQuery or DOM Element} The input you want to check the validity of. If jQuery selector grabs more than one element, only the first element is used.
 * @return {Boolean} Returns true if element is valid and false if not.
 */
-RegX.checkNumber = function($input) {
+function checkNumber($input) {
 	if($input.selector !== undefined) $input = $input[0];
 
 	var step        = parseFloat(attr($input, 'step')),
@@ -538,7 +631,7 @@ RegX.checkNumber = function($input) {
 			regexp = /^\d+$/;
 	
 	if(isNaN(num)) { //Value MUST be a valid floating point number. If not, return with error.
-		return false;
+		throw 'This is not a valid number.';
 	}
 	
 	if(isNaN(step)) { //If step isn't set or is NaN, set temporarily to 0 and determine if it should be based on min value or set to default 1 value.
@@ -597,7 +690,10 @@ RegX.checkNumber = function($input) {
 		}
 	}
 	
-	return (validStep && (isNaN(max) || num <= max) && (isNaN(min) || num >= min) ? true : false);
+	if(!validStep){ throw 'This number is not a valid step.'; }
+	if(!isNaN(max) && num > max){ throw 'This number is bigger than the maximum.'; }
+	if(!isNaN(min) && num < min){ throw 'This number is smaller than the minimum.'; }
+	return;
 };
 
 /**
@@ -616,14 +712,18 @@ RegX.checkNumber = function($input) {
 * @param $input {jQuery or DOM Element} The input you want to check the validity of. If jQuery selector grabs more than one element, only the first element is used.
 * @return {Boolean} Returns true if element is valid and false if not.
 */
-RegX.checkRange = function($input) {
-	if($input.selector !== undefined) $input = $input[0];
+function checkRange($input) {
+	if($input.selector !== undefined){ $input = $input[0]; }
 	
 	var num = parseFloat($input.value);
-	if(isNaN(num)) return false;
+	if(isNaN(num)){ throw 'This is not a valid number.'; }
 	
-	if(USE_BETTER_VALIDATION) return RegX.checkNumber($input);
-	else return true;
+	if(USE_BETTER_VALIDATION){
+		try{ checkNumber($input); }
+		catch (e){ throw e; }
+	}
+	
+	return;
 };
 
 /**
@@ -641,14 +741,14 @@ RegX.checkRange = function($input) {
 * @param $input {jQuery or DOM Element} The input you want to check the validity of. If jQuery selector grabs more than one element, only the first element is used.
 * @return {Boolean} Returns true if element is valid and false if not.
 */
-RegX.checkWeek = function($input){ //YYYY-"W"WW
+function checkWeek($input){ //YYYY-"W"WW
 	if($input.selector !== undefined) $input = $input[0];
 
 	var val       = $input.value,
 	    max       = attr($input, 'max'),
 	    min       = attr($input, 'min'),
-			step      = attr($input, 'step'),
-			basestep  = [1970,1], //Default step base is 1970-W01
+		step      = attr($input, 'step'),
+		basestep  = [1970,1], //Default step base is 1970-W01
 	    regex     = /^(\d{4})\-W(\d{2})$/;
 			
 	if(USE_SANITATION) {
@@ -658,7 +758,7 @@ RegX.checkWeek = function($input){ //YYYY-"W"WW
 		if(step) step = trim(step);
 	}
 
-	if(!regex.test(val)) return false;
+	if(!regex.test(val)){ throw 'This is not a valid week string. e.g. "YYYY-\'W\'WW"'; }
 
 	val = gregorianWeek(val.match(regex)); //Match passes an array with three args
 
@@ -666,13 +766,13 @@ RegX.checkWeek = function($input){ //YYYY-"W"WW
 
 		if(regex.test(max)) {
 			max = gregorianWeek(max.match(regex));
-			if((max && max.length === 2) && max[0] < val[0] || (max[0] === val[0] && max[1] < val[1])) return false;
+			if((max && max.length === 2) && max[0] < val[0] || (max[0] === val[0] && max[1] < val[1])){ throw 'This week date is past the maximum week date.'; }
 			basestep = max;
 		}
 
 		if(regex.test(min)) {
 			min = gregorianWeek(min.match(regex));
-			if((min && min.length === 2) && min[0] > val[0] || (min[0] === val[0] && min[1] > val[1])) return false;
+			if((min && min.length === 2) && min[0] > val[0] || (min[0] === val[0] && min[1] > val[1])){ throw 'This week date is sooner than the minimum week date.'; }
 			basestep = min;
 		}
 
@@ -683,13 +783,13 @@ RegX.checkWeek = function($input){ //YYYY-"W"WW
 			//If max is present, it is the basestep unless min is present.
 			//If min is present, it is the basestep.
 
-			if(spanWeeks(basestep, val) % step !== 0){ return false; }
+			if(spanWeeks(basestep, val) % step !== 0){ throw 'This week date is not a valid step of the base week date.'; }
 		}
 
-		return true;
+		return;
 	}
 
-	return false;
+	throw 'This is not a valid week string. e.g. "YYYY-\'W\'WW"';
 
 	function spanWeeks(base, val){
 		//Determine amount of weeks in between span of years
@@ -788,41 +888,6 @@ function getMessage($elem) {
 //Utility function for date fields to determine leap year.
 function isLeapYear(y){
 	return !(y % 4) && (y % 100) || !(y % 400) ? true : false;
-}
-//Utility function for checking selects in more detail for various browsers.
-//If you want to checkSelect individually, just run a checkValidity on it... same thing.
-function checkSelect($select) {
-	if($select.selector !== undefined) $select = $select[0];
-	
-	var placeholderOptionVal; // value of placeholder
-	
-	// If the element has its required attribute specified, and either none of the option elements in the select element's list of options have their selectedness set to true, or the only option element in the select element's list of options with its selectedness set to true is the placeholder label option, then the element is suffering from being missing.
-	
-	//On submission the select input MUST have a value selected.
-	if($select.selectedIndex < 0){ return false; }
-	
-	//If selected element value is placeholder label option...
-	if($select.value === ''){
-		//In older versions of IE, if the value attribute isn't set on the option, the value will be empty string in the DOM, but will still send a value to the server.
-		//The trick is determining IF the value truly is empty (which is an error) or if IE just thinks it is (not an error)
-		
-		//Check for other browsers
-		placeholderOptionVal = attr($select.options[0], 'value');
-		
-		//Check if var is "specified" in IE
-		if($select.options[0].attributes.value && !$select.options[0].attributes.value.specified){
-			
-			if(trim($select.options[0].innerHTML) === ''){ return false; }
-			
-		} else {
-			
-			if(placeholderOptionVal === '' || (placeholderOptionVal === null && trim($select.options[0].innerHTML) === '')){ return false; }
-			
-		}	
-		
-	}
-
-	return true;
 }
 //Submit Handler
 function onSubmitRegX(e){
