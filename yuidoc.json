@@ -3,8 +3,9 @@
     "description": "The Foo API: a library for doing X, Y, and Z",
     "version": "0.1.3",
     "url": "http://regx.io/",
+	"logo": "/regx.png",
     "options": {
-        "exclude": "big.js, regxTest.html, .dropbox, desktop.ini",
+        "exclude": "big.js, regxTest.html, .dropbox, desktop.ini, regx.ai",
         "outdir": "apidocs",
         "paths": "*"
     }
