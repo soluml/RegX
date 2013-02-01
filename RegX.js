@@ -531,7 +531,7 @@ function checkColor($input) {
 			return;
 		}
 		
-		throw 'This is not a valid hex color. e.g. "#FF0000"';
+		throw 'This is not a valid hex color. e.g. "#F00"';
 	}
 };
 
@@ -897,36 +897,19 @@ function onSubmitRegX(e){
 	//For IE8
 	if(typeof $frm === 'undefined') $frm = e.srcElement;
 
-
-
-
-	//Reset Boolean Error Tracker			
+	//Reset Boolean Error Tracker
 	RegX.isError = false;
-	ERRORS = [];
-
-	//Loop Through Form Elements checking each validity
-	for(i = $frm.length-1; i >= 0; i--){
-		if(!RegX.checkValidity($frm[i])){
-			//Format errors for ERRORS Array
-
-
-
-
-
-			ERRORS.push($frm[i]);
-		}
-	}
+	
+	//Pass form to checkValidity to check all fields.
+	ERRORS = RegX.checkValidity($frm, true);
 
 	//There were errors...
 	if(ERRORS.length > 0){
 		RegX.isError = true;
-		RegX.onFailure(ERRORS, e);
-		if(e.preventDefault) e.preventDefault();
-		return false;
+		RegX.onFailure(e, ERRORS);
 	}
 
 	RegX.onSuccess(e);
-	return true;
 }
 //Add event listeners
 function addEvent(frm){   
@@ -941,9 +924,9 @@ function addEvent(frm){
 }
 //Loop through and bind to each form
 function bindForms(){
-	var $forms = document.getElementsByTagName('form'),
+	var $forms = document.forms,
 			i;
-	for(i = $forms.length; i > 0; i--) addEvent($forms[i-1]);
+	for(i = $forms.length; i > 0; i--){ addEvent($forms[i-1]); }
 }
 bindForms();
 })(RegX);
