@@ -3,13 +3,13 @@
 * RegX.js is a HTML5 input validation polyfill that helps you validate all W3C input types.
 * Kudos to Jonas Raoni Soares Silva for writing Big Number, making it easy to do to precision math with floats for the number/range inputs.
 *
-* Copyright 2012 Benjamin Solum (@soluml)
+* Copyright 2013 Benjamin Solum (@soluml)
 * Released under the Creative Commons Attribution-ShareAlike (CC BY-SA) License.
 *
 * author:  Benjamin Solum
-* version: 0.3
-* url:     http://www.soluml.com/RegX
-* source:  https://github.com/soluml/RegX
+* version: 0.4
+* url:     http://www.soluml.com/RegX/
+* source:  https://regx.github.com/
 * @module RegX
 * @main RegX
 */
@@ -440,7 +440,7 @@ function checkRequired($input) {
 			if(trim($input.value, true).length === 0){ throw {type: 'valueMissing', msg: 'There was no value for this field.'}; }
 			break;
 	}
-};
+}
 
 /**
 * This function checks if the field is valid based on it's pattern attribute. __If no pattern attribute is supplied, this method returns false!__
@@ -454,7 +454,7 @@ function checkPattern($input) {
 	var pattern = new RegExp('^(?:'+attr($input,'pattern')+')$');
 	if(!pattern.test($input.value)){ throw {type: 'patternMismatch', msg: 'The value does not match the pattern: "'+ pattern +'".'}; }
 	return;
-};
+}
 
 /**
 * This function checks if the field's value exceeds the max length based on it's maxlength attribute. __If no maxlength attribute is supplied, this method returns false!__
@@ -468,9 +468,14 @@ function checkMaxLength($input) {
 	if($input.value.length > parseInt(attr($input,'maxLength'),10)){
 		throw {type: 'tooLong', msg: 'The value exceeds the maxlength attribute.'};
 	}
-
 }
-//Utility function for checking selects in more detail for various browsers.
+
+/**
+* This function checks selects in more detail for various browsers.
+*
+* @method checkSelect
+* @private
+*/
 function checkSelect($select) {
 	if($select.selector !== undefined) $select = $select[0];
 	
@@ -496,6 +501,7 @@ function checkSelect($select) {
 		}	
 	}
 }
+
 /**
 * This function checks if the field's value is a valid color.
 * __The input color control shouldn't allow you to set the color to anything BUT a color.__
@@ -536,7 +542,7 @@ function checkColor($input) {
 
 		throw {type: 'typeMismatch', msg: 'This is not a valid hex color. e.g. "#F00"'};
 	}
-};
+}
 
 /**
 * This function checks if the field's value is a valid email address.
@@ -560,7 +566,7 @@ function checkEmail($input) {
 		throw {type: 'typeMismatch', msg: 'This is not a valid email address.'};
 	}
 	return;
-};
+}
 
 /**
 * This function checks if the field's value is a valid URL.
@@ -590,7 +596,7 @@ function checkURL($input) {
 		}
 	}
 	return;
-};
+}
 
 /**
 * This function checks if the field's value is a valid number.
@@ -676,7 +682,7 @@ function checkNumber($input) {
 	if(!isNaN(max) && num > max){ throw {type: 'rangeOverflow', msg: 'This number is bigger than the maximum.'}; }
 	if(!isNaN(min) && num < min){ throw {type: 'rangeUnderflow', msg: 'This number is smaller than the minimum.'}; }
 	return;
-};
+}
 
 /**
 * This function checks if the field's value is a valid number within a range.
@@ -699,7 +705,7 @@ function checkRange($input) {
 	}
 	
 	return;
-};
+}
 
 /**
 * This function checks if the field's value is a valid week optionally within a range.
@@ -802,7 +808,7 @@ function checkWeek($input){ //YYYY-"W"WW
 		}
 		return true;
 	}
-};
+}
 
 
 
