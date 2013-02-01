@@ -354,6 +354,14 @@ RegX.checkValidity = function($elem, returnError) {
 				}
 				return true;
 				break;
+			case 'month':
+				if(!readonly && (required || val.length > 0)){
+					try{ checkMonth($elem); }
+					catch(e){ return formatError(e); }
+				}
+				return true;
+				break;
+				
 			/*
 			case 'datetime':
 				if(!readonly && (required || val.length > 0)){ return !this.validateDateTime($elem); }
@@ -361,10 +369,6 @@ RegX.checkValidity = function($elem, returnError) {
 				break;
 			case 'date':
 				if(!readonly && (required || val.length > 0)){ return !this.validateDate($elem); }
-				return true;
-				break;
-			case 'month':
-				if(!readonly && (required || val.length > 0)){ return !this.validateMonth($elem); }
 				return true;
 				break;
 			case 'time':
@@ -708,7 +712,7 @@ function checkRange($input) {
 }
 
 /**
-* This function checks if the field's value is a valid week optionally within a range.
+* This function checks if the field's value is a valid week, optionally within a range.
 * The week string must contain 4 digits for the year, followed by a dash, followed by a capital W, followed by two week digits, ranging from 01 to 53.
 * __The week input supports both a min and a max week. These strings must be valid week strings.__
 * The week input also supports a step attribute, which is an integer describing how many weeks one should step.
@@ -810,8 +814,96 @@ function checkWeek($input){ //YYYY-"W"WW
 	}
 }
 
+/**
+* This function checks if the field's value is a valid month, optionally within a range.
+* The month string must contain 4 digits for the year, followed by a dash, followed by two month digits, ranging from 01 to 12.
+* __The month input supports both a min and a max month. These strings must be valid month strings.__
+* The month input also supports a step attribute, which is an integer describing how many months one should step.
+*
+* @method checkMonth
+* @private
+*/
+function checkMonth($input){ //YYYY-MM
+	if($input.selector !== undefined) $input = $input[0];
 
+	var val       = $input.value,
+	    max       = attr($input, 'max'),
+	    min       = attr($input, 'min'),
+		step      = attr($input, 'step'),
+		basestep  = [1970,1], //Default step base is 1970-01
+	    regex     = /^(\d{4})\-(\d{2})$/;
+			
+	if(USE_SANITATION) {
+		val = trim(val);
+		if(max) max = trim(max);
+		if(min) min = trim(min);
+		if(step) step = trim(step);
+	}
 
+	if(!regex.test(val)){ throw {type: 'typeMismatch', msg: 'This is not a valid month string. e.g. "YYYY-MM"'}; }
+
+	val = gregorianMonth(val.match(regex)); //Match passes an array with three args
+
+	if(val && val.length === 2) {
+		//Check Max Month
+		if(regex.test(max)) {
+			max = gregorianMonth(max.match(regex));
+			if((max && max.length === 2) && max[0] < val[0] || (max[0] === val[0] && max[1] < val[1])){
+				throw {type: 'rangeOverflow', msg: 'This month is past the maximum month.'};
+			}
+			basestep = max;
+		}
+		//Check Min Month
+		if(regex.test(min)) {
+			min = gregorianMonth(min.match(regex));
+			if((min && min.length === 2) && min[0] > val[0] || (min[0] === val[0] && min[1] > val[1])){
+				throw {type: 'rangeUnderflow', msg: 'This month is sooner than the minimum month.'};
+			}
+			basestep = min;
+		}
+		//Check Step
+		if(/^\d+$/.test(step)){
+			step = parseInt(step, 10);
+
+			//Basestep is 1970-01 unless the following.
+			//If max is present, it is the basestep unless min is present.
+			//If min is present, it is the basestep.
+			if(spanMonths(basestep, val) % step !== 0){
+				throw {type: 'stepMismatch', msg: 'This month is not a valid step of the base month.'};
+			}
+		}
+
+		return;
+	}
+
+	throw {type: 'typeMismatch', msg: 'This is not a valid month string. e.g. "YYYY-MM"'};
+	
+	function spanMonths(base, val){
+		//Determine amount of weeks in between span of years
+		var nummonths = 0,
+		    i;
+
+		for(i = base[0]; i < val[0]; i++){ nummonths += 12; }
+
+		//Subtract weeks you're already into base year.
+		nummonths -= base[1];
+
+		//Add weeks you haven't yet added in for the value year
+		nummonths += val[1];
+
+		return nummonths;
+	}
+	function gregorianMonth(val) {
+		var year = parseInt(val[1],10),
+			month = parseInt(val[2],10);
+	
+		if(1 > year || 1 > month || month > 12){
+			return false;
+		}
+	
+		return [year, month];
+	}
+}
 
 
 
