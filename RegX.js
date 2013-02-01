@@ -106,7 +106,9 @@ USE_SERVER_VALIDATION = (RegX.USE_SERVER_VALIDATION === true ? true : false),
 			}
 		]
 */
-ERRORS = [];
+ERRORS = [],
+//Boolean value for btns with the formnovalidate attribute.
+isFormnovalidate = false;
 
 /**
 * Boolean check if there are errors in the last submitted form.
@@ -831,43 +833,66 @@ function onSubmitRegX(e){
 	var $frm = e.target,
 		novalidate = false,
 		i;
-
-	//For IE8
-	if(typeof $frm === 'undefined'){ $frm = e.srcElement; }
-
-	//If form has the attribute novalidate, stop validation.
-	if(typeof attr($frm, 'novalidate') == 'string'){ novalidate = true; }
-	if(!novalidate){
-		//Reset Boolean Error Tracker
-		RegX.isError = false;
-		
-		//Pass form to checkValidity to check all fields.
-		ERRORS = RegX.checkValidity($frm, true);
 	
-		//There were errors...
-		if(ERRORS.length > 0){
-			RegX.isError = true;
-			RegX.onFailure(e, ERRORS);
+	//If submit button had formnovalidate set
+	if(!isFormnovalidate){
+		//For IE
+		if(typeof $frm === 'undefined'){ $frm = e.srcElement; }
+	
+		//If form has the attribute novalidate, stop validation.
+		if(typeof attr($frm, 'novalidate') == 'string'){ novalidate = true; }
+		if(!novalidate){
+			//Reset Boolean Error Tracker
+			RegX.isError = false;
+			
+			//Pass form to checkValidity to check all fields.
+			ERRORS = RegX.checkValidity($frm, true);
+		
+			//There were errors...
+			if(ERRORS.length > 0){
+				RegX.isError = true;
+				RegX.onFailure(e, ERRORS);
+			}
+			RegX.onSuccess(e);
 		}
-		RegX.onSuccess(e);
 	}
+	
+	//Reset var
+	isFormnovalidate = false;
 }
+//Click Handler for Submits
+function onClickRegX(e){ isFormnovalidate = true; }
 //Add event listeners
-function addEvent(frm){   
+function addEvent(frm, evt, func){   
   if (frm.addEventListener) {   
-    frm.addEventListener('submit', onSubmitRegX, false);    
+    frm.addEventListener(evt, func, false);    
     return true;    
   } else if (frm.attachEvent) {   
-    return frm.attachEvent('onsubmit', onSubmitRegX);    
+    return frm.attachEvent('on'+evt, func);    
   } else {   
-    frm['onsubmit'] = onSubmitRegX;
+    frm['on'+evt] = func;
   }   
 }
 //Loop through and bind to each form
 function bindForms(){
 	var $forms = document.forms,
-			i;
-	for(i = $forms.length; i > 0; i--){ addEvent($forms[i-1]); }
+		$in = document.getElementsByTagName('input'),
+		$btn = document.getElementsByTagName('button'),
+		i;
+	for(i = $forms.length; i > 0; i--){ addEvent($forms[i-1], 'submit', onSubmitRegX); }
+	//Bind <input type="submit" formnovalidate> to prevent validation on submit
+	for(i = $in.length; i > 0; i--){
+		if(attr($in[i-1], 'type') === 'submit' && typeof attr($in[i-1], 'formnovalidate') == 'string'){
+			addEvent($in[i-1], 'click', onClickRegX);
+		}
+	}
+	//Bind <button type="submit" formnovalidate> to prevent validation on submit
+	for(i = $btn.length; i > 0; i--){
+		//Bind <button type="submit">
+		if(attr($btn[i-1], 'type') === 'submit' && typeof attr($btn[i-1], 'formnovalidate') == 'string'){
+			addEvent($btn[i-1], 'click', onClickRegX);
+		}	
+	}
 }
 bindForms();
 })(RegX);
