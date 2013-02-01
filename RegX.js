@@ -152,6 +152,42 @@ RegX.onSuccess = function(){};
 RegX.onFailure = function(){};
 
 /**
+* This function loops through each form and binds methods to the submit event. It also loops through the submit buttons and binds click events to those.
+* This function is called at window.onload by default.
+* __If you add additional forms through JavaScript or AJAX, this method must be called again to ensure validation of that form.__
+*
+@example
+    RegX.init();
+*
+* @method init
+*/
+RegX.init = function(){
+	var $forms = document.forms,
+		$in = document.getElementsByTagName('input'),
+		$btn = document.getElementsByTagName('button'),
+		i;
+	for(i = $forms.length; i > 0; i--){
+		removeEvent($forms[i-1], 'submit', onSubmitRegX);
+		addEvent($forms[i-1], 'submit', onSubmitRegX);
+	}
+	//Bind <input type="submit" formnovalidate> to prevent validation on submit
+	for(i = $in.length; i > 0; i--){
+		if(attr($in[i-1], 'type') === 'submit' && typeof attr($in[i-1], 'formnovalidate') == 'string'){
+			removeEvent($in[i-1], 'click', onClickRegX);
+			addEvent($in[i-1], 'click', onClickRegX);
+		}
+	}
+	//Bind <button type="submit" formnovalidate> to prevent validation on submit
+	for(i = $btn.length; i > 0; i--){
+		//Bind <button type="submit">
+		if(attr($btn[i-1], 'type') === 'submit' && typeof attr($btn[i-1], 'formnovalidate') == 'string'){
+			removeEvent($btn[i-1], 'click', onClickRegX);
+			addEvent($btn[i-1], 'click', onClickRegX);
+		}	
+	}
+};
+
+/**
 * __This function returns TRUE if the field is valid and FALSE if not.__ This mirrors native browser implementation.
 * Use this if you want to see if the field is valid, taking into consideration the DOM.
 * If you want to match an input's value, irregardless of whether it's immutable, use the checkRequired and check["Input"] functions.
@@ -861,40 +897,36 @@ function onSubmitRegX(e){
 	isFormnovalidate = false;
 }
 //Click Handler for Submits
-function onClickRegX(e){ isFormnovalidate = true; }
+function onClickRegX(e){
+	isFormnovalidate = true;
+}
 //Add event listeners
-function addEvent(frm, evt, func){   
-  if (frm.addEventListener) {   
-    frm.addEventListener(evt, func, false);    
-    return true;    
-  } else if (frm.attachEvent) {   
-    return frm.attachEvent('on'+evt, func);    
-  } else {   
-    frm['on'+evt] = func;
-  }   
+function addEvent(obj, type, fn){
+  if (obj.attachEvent){
+    obj['e'+type+fn] = fn;
+    obj[type+fn] = function(){obj['e'+type+fn]( window.event );}
+    obj.attachEvent( 'on'+type, obj[type+fn] );
+  } else
+    obj.addEventListener(type, fn, false);
 }
-//Loop through and bind to each form
-function bindForms(){
-	var $forms = document.forms,
-		$in = document.getElementsByTagName('input'),
-		$btn = document.getElementsByTagName('button'),
-		i;
-	for(i = $forms.length; i > 0; i--){ addEvent($forms[i-1], 'submit', onSubmitRegX); }
-	//Bind <input type="submit" formnovalidate> to prevent validation on submit
-	for(i = $in.length; i > 0; i--){
-		if(attr($in[i-1], 'type') === 'submit' && typeof attr($in[i-1], 'formnovalidate') == 'string'){
-			addEvent($in[i-1], 'click', onClickRegX);
-		}
-	}
-	//Bind <button type="submit" formnovalidate> to prevent validation on submit
-	for(i = $btn.length; i > 0; i--){
-		//Bind <button type="submit">
-		if(attr($btn[i-1], 'type') === 'submit' && typeof attr($btn[i-1], 'formnovalidate') == 'string'){
-			addEvent($btn[i-1], 'click', onClickRegX);
-		}	
-	}
+//Remove event handlers
+function removeEvent(obj, type, fn){
+  if ( obj.detachEvent){
+    obj.detachEvent('on'+type, obj[type+fn]);
+    obj[type+fn] = null;
+  } else
+    obj.removeEventListener(type, fn, false);
 }
-bindForms();
+//Protects any previously specified onload events 
+function wOL(f1, f2){
+    return function(){
+        if(f1)
+			f1();
+        if(f2)
+			f2();
+    }
+}
+window.onload = wOL(window.onload, RegX.init);
 })(RegX);
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // big.js Library //////////////////////////////////////////////////////////////////////////////////////////////////////////////
