@@ -829,24 +829,28 @@ function isLeapYear(y){
 //Submit Handler
 function onSubmitRegX(e){
 	var $frm = e.target,
-			i;
+		novalidate = false,
+		i;
 
 	//For IE8
-	if(typeof $frm === 'undefined') $frm = e.srcElement;
+	if(typeof $frm === 'undefined'){ $frm = e.srcElement; }
 
-	//Reset Boolean Error Tracker
-	RegX.isError = false;
+	//If form has the attribute novalidate, stop validation.
+	if(typeof attr($frm, 'novalidate') == 'string'){ novalidate = true; }
+	if(!novalidate){
+		//Reset Boolean Error Tracker
+		RegX.isError = false;
+		
+		//Pass form to checkValidity to check all fields.
+		ERRORS = RegX.checkValidity($frm, true);
 	
-	//Pass form to checkValidity to check all fields.
-	ERRORS = RegX.checkValidity($frm, true);
-
-	//There were errors...
-	if(ERRORS.length > 0){
-		RegX.isError = true;
-		RegX.onFailure(e, ERRORS);
+		//There were errors...
+		if(ERRORS.length > 0){
+			RegX.isError = true;
+			RegX.onFailure(e, ERRORS);
+		}
+		RegX.onSuccess(e);
 	}
-
-	RegX.onSuccess(e);
 }
 //Add event listeners
 function addEvent(frm){   
