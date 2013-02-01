@@ -361,7 +361,7 @@ RegX.checkValidity = function($elem, returnError) {
 		}
 		//Format the error for returning.
 		function formatError(e){
-			if(returnError){ return {"name": name, "type": tag, "value": val, "msg": getMessage($elem), "error_msg": e}; }
+			if(returnError){ return {"name": name, "type": tag, "value": val, "msg": getMessage($elem), "error":e.type, "error_msg": e.msg}; }
 			return false;
 		}
 	}
@@ -370,21 +370,14 @@ RegX.checkValidity = function($elem, returnError) {
 /**
 * This function checks if the field is valid, assuming that the field IS required and only observing that fact.
 *
-@example
-    RegX.checkValidity(document.getElementById('ELEMENT_ID'));
-		
-@example
-    RegX.checkValidity(jQuery('input:eq(0)'));
-*
 * @method checkRequired
-* @param $input {jQuery or DOM Element} The input you want to check the validity of. If jQuery selector grabs more than one element, only the first element is used.
-* @return {Boolean} Returns true if element is valid and false if not.
+* @private
 */
 function checkRequired($input) {
 	if($input.selector !== undefined) $input = $input[0];
 	switch(attr($input,'type')) {
 		case 'checkbox':
-			if(!$input.checked){ throw 'Checkbox was left unchecked.'; }
+			if(!$input.checked){ throw {type: 'valueMissing', msg: 'Checkbox was left unchecked.'}; }
 			break;
 		case 'radio':
 			var radioName = $input.getAttribute('name'),
@@ -403,10 +396,10 @@ function checkRequired($input) {
 					return;
 				}
 			}
-			throw 'A radio option was not checked.';
+			throw {type: 'valueMissing', msg: 'A radio option was not checked.'};
 			break;
 		default:
-			if(trim($input.value, true).length === 0){ throw 'There was no value for this field.'; }
+			if(trim($input.value, true).length === 0){ throw {type: 'valueMissing', msg: 'There was no value for this field.'}; }
 			break;
 	}
 };
@@ -415,20 +408,13 @@ function checkRequired($input) {
 * This function checks if the field is valid based on it's pattern attribute. __If no pattern attribute is supplied, this method returns false!__
 * If specified, the attribute's value must match the JavaScript Pattern production ([ECMA262]). The pattern is compiled with the "global, ignoreCase, and multiline flags disabled".
 *
-@example
-    RegX.checkPattern(document.getElementById('ELEMENT_ID'));
-		
-@example
-    RegX.checkPattern(jQuery('input:eq(0)'));
-*
 * @method checkPattern
-* @param $input {jQuery or DOM Element} The input you want to check the validity of. If jQuery selector grabs more than one element, only the first element is used.
-* @return {Boolean} Returns true if element is valid and false if not.
+* @private
 */
 function checkPattern($input) {
 	if($input.selector !== undefined) $input = $input[0];
 	var pattern = new RegExp('^(?:'+attr($input,'pattern')+')$');
-	if(!pattern.test($input.value)){ throw 'The value does not match the pattern: "'+ pattern +'".'; }
+	if(!pattern.test($input.value)){ throw {type: 'patternMismatch', msg: 'The value does not match the pattern: "'+ pattern +'".'}; }
 	return;
 };
 
@@ -436,27 +422,13 @@ function checkPattern($input) {
 * This function checks if the field's value exceeds the max length based on it's maxlength attribute. __If no maxlength attribute is supplied, this method returns false!__
 * If maxlength is specified as a float, the maxlength value is floored. Maxlength value must be a number >= 0 or else this property is effectively ignored.
 *
-@example
-    RegX.checkMaxLength(document.getElementById('ELEMENT_ID'));
-		
-@example
-    RegX.checkMaxLength(jQuery('input:eq(0)'));
-*
 * @method checkMaxLength
-* @param $input {jQuery or DOM Element} The input you want to check the validity of. If jQuery selector grabs more than one element, only the first element is used.
-* @return {Boolean} Returns true if element is valid and false if not.
+* @private
 */
 function checkMaxLength($input) {
 	if($input.selector !== undefined){ $input = $input[0]; }
-	//if($input.value.length <= parseInt(attr($input,'maxLength'),10){
-		//return true;
-	//} else {
-		//throw 'The value exceeds the maxlength attribute.';
-	//}
-
-
 	if($input.value.length > parseInt(attr($input,'maxLength'),10)){
-		throw 'The value exceeds the maxlength attribute.';
+		throw {type: 'tooLong', msg: 'The value exceeds the maxlength attribute.'};
 	}
 
 }
@@ -469,7 +441,7 @@ function checkSelect($select) {
 	// If the element has its required attribute specified, and either none of the option elements in the select element's list of options have their selectedness set to true, or the only option element in the select element's list of options with its selectedness set to true is the placeholder label option, then the element is suffering from being missing.
 	
 	//On submission the select input MUST have a value selected.
-	if($select.selectedIndex < 0){ throw 'An option was not selected.'; }
+	if($select.selectedIndex < 0){ throw {type: 'valueMissing', msg: 'An option was not selected.'}; }
 	
 	//If selected element value is placeholder label option...
 	if($select.value === ''){
@@ -480,9 +452,9 @@ function checkSelect($select) {
 		placeholderOptionVal = attr($select.options[0], 'value');
 		//Check if var is "specified" in IE
 		if($select.options[0].attributes.value && !$select.options[0].attributes.value.specified){
-			if(trim($select.options[0].innerHTML) === ''){ throw 'No value was specified.'; }
+			if(trim($select.options[0].innerHTML) === ''){ throw {type: 'valueMissing', msg: 'No value was specified.'}; }
 		} else {
-			if(placeholderOptionVal === '' || (placeholderOptionVal === null && trim($select.options[0].innerHTML) === '')){ throw 'No value was specified.'; }
+			if(placeholderOptionVal === '' || (placeholderOptionVal === null && trim($select.options[0].innerHTML) === '')){ throw {type: 'valueMissing', msg: 'No value was specified.'}; }
 		}	
 	}
 }
@@ -492,15 +464,8 @@ function checkSelect($select) {
 * In a modern browser, checkValidity() should ALWAYS return true, because the default value for anything other than a valid hex color, is #000000.
 * When the setting RegX.USE_BETTER_VALIDATION is set to true, RegX allows the use of SVG color keywords or simple colors (ex. aliceblue or #f00).
 *
-@example
-    RegX.checkColor(document.getElementById('ELEMENT_ID'));
-		
-@example
-    RegX.checkColor(jQuery('input:eq(0)'));
-*
 * @method checkColor
-* @param $input {jQuery or DOM Element} The input you want to check the validity of. If jQuery selector grabs more than one element, only the first element is used.
-* @return {Boolean} Returns true if element is valid and false if not.
+* @private
 */
 function checkColor($input) {
 	if($input.selector !== undefined) $input = $input[0];
@@ -512,15 +477,15 @@ function checkColor($input) {
 		return;
 	} else {
 		if(!USE_BETTER_VALIDATION || val.length === 0){
-			throw 'This is not a valid hex color. e.g. "#FF0000"';
+			throw {type: 'typeMismatch', msg: 'This is not a valid hex color. e.g. "#FF0000"'};
 		} else if(val.length === 0){
-			throw 'This field is empty.';
+			throw {type: 'valueMissing', msg: 'This field is empty.'};
 		}
 		
 		//Do Legacy Color Value Parser
 		val = trim(val);
 		if(val.toLowerCase() === 'transparent'){
-			throw 'This is not a valid hex color. e.g. "#FF0000"';
+			throw {type: 'typeMismatch', msg: 'This is not a valid hex color. e.g. "#FF0000"'};
 		}
 		
 		//Check SVG color keywords
@@ -530,8 +495,8 @@ function checkColor($input) {
 		if(val.length === 4 && /^#[a-f0-9]{3}$/i.test(val)){
 			return;
 		}
-		
-		throw 'This is not a valid hex color. e.g. "#F00"';
+
+		throw {type: 'typeMismatch', msg: 'This is not a valid hex color. e.g. "#F00"'};
 	}
 };
 
@@ -540,15 +505,8 @@ function checkColor($input) {
 * Spec: http://www.w3.org/TR/html5/states-of-the-type-attribute.html#e-mail-state-type-email
 * This method can use "Better Validation" based on  Arluison Guillaume's regex.
 *
-@example
-    RegX.checkEmail(document.getElementById('ELEMENT_ID'));
-		
-@example
-    RegX.checkEmail(jQuery('input:eq(0)'));
-*
 * @method checkEmail
-* @param $input {jQuery or DOM Element} The input you want to check the validity of. If jQuery selector grabs more than one element, only the first element is used.
-* @return {Boolean} Returns true if element is valid and false if not.
+* @private
 */
 function checkEmail($input) {
 	if($input.selector !== undefined) $input = $input[0];
@@ -561,7 +519,7 @@ function checkEmail($input) {
 	} //'
 	
 	if(!regex.test(email)){
-		throw 'This is not a valid email address.';	
+		throw {type: 'typeMismatch', msg: 'This is not a valid email address.'};
 	}
 	return;
 };
@@ -573,15 +531,8 @@ function checkEmail($input) {
 *	Scheme = ALPHA *( ALPHA / DIGIT / "+" / "-" / "." )
 * This method can use "Better Validation" to do deeper checking for ftp and http/https (as Chrome does).
 *
-@example
-    RegX.checkURL(document.getElementById('ELEMENT_ID'));
-		
-@example
-    RegX.checkURL(jQuery('input:eq(0)'));
-*
 * @method checkURL
-* @param $input {jQuery or DOM Element} The input you want to check the validity of. If jQuery selector grabs more than one element, only the first element is used.
-* @return {Boolean} Returns true if element is valid and false if not.
+* @private
 */
 function checkURL($input) {
 	if($input.selector !== undefined) $input = $input[0];
@@ -589,7 +540,7 @@ function checkURL($input) {
 	//Scheme = ALPHA *( ALPHA / DIGIT / "+" / "-" / "." )
 	var url = trim($input.value);
 	if(!/^[a-z][a-z\d+\-.]*:/i.test(url)) { //Global Scheme Check for Firefox, Safari, Opera and Chrome
-		 throw 'This is not a valid URL.';
+		 throw {type: 'typeMismatch', msg: 'This is not a valid URL.'};
 	}
 	//Path can be empty.
 	//On Chrome, path cannot be empty for ftp, http, or https.
@@ -597,7 +548,7 @@ function checkURL($input) {
 		//Google Does not like these chars in url: @~=;[]%^
 		//Google Does not like these additional chars after authority path-abempty: :#\/
 		if(!/^(ftp|https?):(\/\/[^\/:#\\@~=;\[\]%\^][^@~=;\[\]%\^]*|\/[^\/:#\\@~=;\[\]%\^][^@~=;\[\]%\^]*|[^\/:#\\@~=;\[\]%\^][^\/@~=;\[\]%\^]*[^@~=;\[\]%\^]*)$/i.test(url)) {
-			throw 'This is not a valid URL.';
+			throw {type: 'typeMismatch', msg: 'This is not a valid web address.'};
 		}
 	}
 	return;
@@ -607,15 +558,8 @@ function checkURL($input) {
 * This function checks if the field's value is a valid number.
 * Specify the min, max, and step to control which numbers are available.
 *
-@example
-    RegX.checkNumber(document.getElementById('ELEMENT_ID'));
-		
-@example
-    RegX.checkNumber(jQuery('input:eq(0)'));
-*
 * @method checkNumber
-* @param $input {jQuery or DOM Element} The input you want to check the validity of. If jQuery selector grabs more than one element, only the first element is used.
-* @return {Boolean} Returns true if element is valid and false if not.
+* @private
 */
 function checkNumber($input) {
 	if($input.selector !== undefined) $input = $input[0];
@@ -631,7 +575,7 @@ function checkNumber($input) {
 			regexp = /^\d+$/;
 	
 	if(isNaN(num)) { //Value MUST be a valid floating point number. If not, return with error.
-		throw 'This is not a valid number.';
+		throw {type: 'typeMismatch', msg: 'This is not a valid number.'};
 	}
 	
 	if(isNaN(step)) { //If step isn't set or is NaN, set temporarily to 0 and determine if it should be based on min value or set to default 1 value.
@@ -690,9 +634,9 @@ function checkNumber($input) {
 		}
 	}
 	
-	if(!validStep){ throw 'This number is not a valid step.'; }
-	if(!isNaN(max) && num > max){ throw 'This number is bigger than the maximum.'; }
-	if(!isNaN(min) && num < min){ throw 'This number is smaller than the minimum.'; }
+	if(!validStep){ throw {type: 'stepMismatch', msg: 'This number is not a valid step.'}; }
+	if(!isNaN(max) && num > max){ throw {type: 'rangeOverflow', msg: 'This number is bigger than the maximum.'}; }
+	if(!isNaN(min) && num < min){ throw {type: 'rangeUnderflow', msg: 'This number is smaller than the minimum.'}; }
 	return;
 };
 
@@ -700,23 +644,16 @@ function checkNumber($input) {
 * This function checks if the field's value is a valid number within a range.
 * The range input seems to be a different GUI on top of the number input type. If you look at the spec for input range, no matter what value you set, the browser should auto correct it for you.
 * __Since the spec assumes always valid (unless somehow, you pass in a "NaN"), RegX assumes always valid (unless somehow, you pass in a "NaN").__ The control will literally not allow you to move outside the range.
-* However, when USE_BETTER_VALIDATION is true, we treat range like a number and assume that it should be validated the same way.	
-*
-@example
-    RegX.checkRange(document.getElementById('ELEMENT_ID'));
-		
-@example
-    RegX.checkRange(jQuery('input:eq(0)'));
+* However, when USE_BETTER_VALIDATION is true, we treat range like a number and assume that it should be validated the same way.
 *
 * @method checkRange
-* @param $input {jQuery or DOM Element} The input you want to check the validity of. If jQuery selector grabs more than one element, only the first element is used.
-* @return {Boolean} Returns true if element is valid and false if not.
+* @private
 */
 function checkRange($input) {
 	if($input.selector !== undefined){ $input = $input[0]; }
 	
 	var num = parseFloat($input.value);
-	if(isNaN(num)){ throw 'This is not a valid number.'; }
+	if(isNaN(num)){ throw {type: 'typeMismatch', msg: 'This is not a valid number.'}; }
 	
 	if(USE_BETTER_VALIDATION){
 		try{ checkNumber($input); }
@@ -730,16 +667,10 @@ function checkRange($input) {
 * This function checks if the field's value is a valid week optionally within a range.
 * The week string must contain 4 digits for the year, followed by a dash, followed by a capital W, followed by two week digits, ranging from 01 to 53.
 * __The week input supports both a min and a max week. These strings must be valid week strings.__
-*
-@example
-    RegX.checkWeek(document.getElementById('ELEMENT_ID'));
-		
-@example
-    RegX.checkWeek(jQuery('input:eq(0)'));
+* The week input also supports a step attribute, which is an integer describing how many weeks one should step.
 *
 * @method checkWeek
-* @param $input {jQuery or DOM Element} The input you want to check the validity of. If jQuery selector grabs more than one element, only the first element is used.
-* @return {Boolean} Returns true if element is valid and false if not.
+* @private
 */
 function checkWeek($input){ //YYYY-"W"WW
 	if($input.selector !== undefined) $input = $input[0];
@@ -758,7 +689,7 @@ function checkWeek($input){ //YYYY-"W"WW
 		if(step) step = trim(step);
 	}
 
-	if(!regex.test(val)){ throw 'This is not a valid week string. e.g. "YYYY-\'W\'WW"'; }
+	if(!regex.test(val)){ throw {type: 'typeMismatch', msg: 'This is not a valid week string. e.g. "YYYY-\'W\'WW"'}; }
 
 	val = gregorianWeek(val.match(regex)); //Match passes an array with three args
 
@@ -766,13 +697,17 @@ function checkWeek($input){ //YYYY-"W"WW
 
 		if(regex.test(max)) {
 			max = gregorianWeek(max.match(regex));
-			if((max && max.length === 2) && max[0] < val[0] || (max[0] === val[0] && max[1] < val[1])){ throw 'This week date is past the maximum week date.'; }
+			if((max && max.length === 2) && max[0] < val[0] || (max[0] === val[0] && max[1] < val[1])){
+				throw {type: 'rangeOverflow', msg: 'This week date is past the maximum week date.'};
+			}
 			basestep = max;
 		}
 
 		if(regex.test(min)) {
 			min = gregorianWeek(min.match(regex));
-			if((min && min.length === 2) && min[0] > val[0] || (min[0] === val[0] && min[1] > val[1])){ throw 'This week date is sooner than the minimum week date.'; }
+			if((min && min.length === 2) && min[0] > val[0] || (min[0] === val[0] && min[1] > val[1])){
+				throw {type: 'rangeUnderflow', msg: 'This week date is sooner than the minimum week date.'};
+			}
 			basestep = min;
 		}
 
@@ -783,13 +718,15 @@ function checkWeek($input){ //YYYY-"W"WW
 			//If max is present, it is the basestep unless min is present.
 			//If min is present, it is the basestep.
 
-			if(spanWeeks(basestep, val) % step !== 0){ throw 'This week date is not a valid step of the base week date.'; }
+			if(spanWeeks(basestep, val) % step !== 0){
+				throw {type: 'stepMismatch', msg: 'This week date is not a valid step of the base week date.'};
+			}
 		}
 
 		return;
 	}
 
-	throw 'This is not a valid week string. e.g. "YYYY-\'W\'WW"';
+	throw {type: 'typeMismatch', msg: 'This is not a valid week string. e.g. "YYYY-\'W\'WW"'};
 
 	function spanWeeks(base, val){
 		//Determine amount of weeks in between span of years
@@ -878,7 +815,7 @@ function getMessage($elem) {
 		return msg;
 	}
 	
-	msg = attr($elem, 'title');
+	msg = $elem.validationMessage;
 	if(typeof msg === "string") {
 		return msg;
 	}
