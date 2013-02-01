@@ -618,9 +618,9 @@ function checkNumber($input) {
 	    num         = parseFloat($input.value),
 	    specialStep = false, //Special Step means that the value has to be the absolute value of the min plus or minus n where n is an integer.
 	    validStep   = false, // Logic sets this to true if it finds that the value is an even step.
-			tempMin,
+		tempMin,
 	    tempNum,
-			regexp = /^\d+$/;
+		regexp = /^\d+$/;
 	
 	if(isNaN(num)) { //Value MUST be a valid floating point number. If not, return with error.
 		throw {type: 'typeMismatch', msg: 'This is not a valid number.'};
@@ -682,9 +682,9 @@ function checkNumber($input) {
 		}
 	}
 	
-	if(!validStep){ throw {type: 'stepMismatch', msg: 'This number is not a valid step.'}; }
-	if(!isNaN(max) && num > max){ throw {type: 'rangeOverflow', msg: 'This number is bigger than the maximum.'}; }
-	if(!isNaN(min) && num < min){ throw {type: 'rangeUnderflow', msg: 'This number is smaller than the minimum.'}; }
+	if(!validStep){ throw {type: 'stepMismatch', msg: 'This number is not a valid step ('+step+').'}; }
+	if(!isNaN(max) && num > max){ throw {type: 'rangeOverflow', msg: 'This number is larger than the maximum ('+max+').'}; }
+	if(!isNaN(min) && num < min){ throw {type: 'rangeUnderflow', msg: 'This number is smaller than the minimum ('+min+').'}; }
 	return;
 }
 
@@ -746,7 +746,7 @@ function checkWeek($input){ //YYYY-"W"WW
 		if(regex.test(max)) {
 			max = gregorianWeek(max.match(regex));
 			if((max && max.length === 2) && max[0] < val[0] || (max[0] === val[0] && max[1] < val[1])){
-				throw {type: 'rangeOverflow', msg: 'This week date is past the maximum week date.'};
+				throw {type: 'rangeOverflow', msg: 'This week date is past the maximum week date ('+pad(4, max[0])+'-'+pad(2, max[1])+').'};
 			}
 			basestep = max;
 		}
@@ -754,7 +754,7 @@ function checkWeek($input){ //YYYY-"W"WW
 		if(regex.test(min)) {
 			min = gregorianWeek(min.match(regex));
 			if((min && min.length === 2) && min[0] > val[0] || (min[0] === val[0] && min[1] > val[1])){
-				throw {type: 'rangeUnderflow', msg: 'This week date is sooner than the minimum week date.'};
+				throw {type: 'rangeUnderflow', msg: 'This week date is sooner than the minimum week date ('+pad(4, min[0])+'-'+pad(2, min[1])+').'};
 			}
 			basestep = min;
 		}
@@ -765,9 +765,8 @@ function checkWeek($input){ //YYYY-"W"WW
 			//Basestep is 1970-W01 unless the following.
 			//If max is present, it is the basestep unless min is present.
 			//If min is present, it is the basestep.
-
 			if(spanWeeks(basestep, val) % step !== 0){
-				throw {type: 'stepMismatch', msg: 'This week date is not a valid step of the base week date.'};
+				throw {type: 'stepMismatch', msg: 'This week date is not a valid step ('+step+') of the base week date ('+pad(4, basestep[0])+'-'+pad(2, basestep[1])+').'};
 			}
 		}
 
@@ -849,7 +848,7 @@ function checkMonth($input){ //YYYY-MM
 		if(regex.test(max)) {
 			max = gregorianMonth(max.match(regex));
 			if((max && max.length === 2) && max[0] < val[0] || (max[0] === val[0] && max[1] < val[1])){
-				throw {type: 'rangeOverflow', msg: 'This month is past the maximum month.'};
+				throw {type: 'rangeOverflow', msg: 'This month is past the maximum month ('+pad(4, max[0])+'-'+pad(2, max[1])+').'};
 			}
 			basestep = max;
 		}
@@ -857,7 +856,7 @@ function checkMonth($input){ //YYYY-MM
 		if(regex.test(min)) {
 			min = gregorianMonth(min.match(regex));
 			if((min && min.length === 2) && min[0] > val[0] || (min[0] === val[0] && min[1] > val[1])){
-				throw {type: 'rangeUnderflow', msg: 'This month is sooner than the minimum month.'};
+				throw {type: 'rangeUnderflow', msg: 'This month is sooner than the minimum month ('+pad(4, min[0])+'-'+pad(2, min[1])+').'};
 			}
 			basestep = min;
 		}
@@ -869,7 +868,7 @@ function checkMonth($input){ //YYYY-MM
 			//If max is present, it is the basestep unless min is present.
 			//If min is present, it is the basestep.
 			if(spanMonths(basestep, val) % step !== 0){
-				throw {type: 'stepMismatch', msg: 'This month is not a valid step of the base month.'};
+				throw {type: 'stepMismatch', msg: 'This month is not a valid step ('+step+') of the base month ('+pad(4, basestep[0])+'-'+pad(2, basestep[1])+').'};
 			}
 		}
 
@@ -879,20 +878,9 @@ function checkMonth($input){ //YYYY-MM
 	throw {type: 'typeMismatch', msg: 'This is not a valid month string. e.g. "YYYY-MM"'};
 	
 	function spanMonths(base, val){
-		//Determine amount of weeks in between span of years
-		var nummonths = 0,
-		    i;
-
-		for(i = base[0]; i < val[0]; i++){ nummonths += 12; }
-
-		//Subtract weeks you're already into base year.
-		nummonths -= base[1];
-
-		//Add weeks you haven't yet added in for the value year
-		nummonths += val[1];
-
-		return nummonths;
+		return ((val[0]-base[0]) * 12) - base[1] + val[1];
 	}
+	
 	function gregorianMonth(val) {
 		var year = parseInt(val[1],10),
 			month = parseInt(val[2],10);
@@ -957,6 +945,12 @@ function getMessage($elem) {
 	}
 	
 	return '';
+}
+//Add zeros for strings
+function pad(n, str){
+	if(typeof str !== 'string'){ str = str + ''; }
+	while(str.length < n){ str = '0' + str; }
+	return str;
 }
 //Utility function for date fields to determine leap year.
 function isLeapYear(y){
