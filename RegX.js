@@ -361,14 +361,22 @@ RegX.checkValidity = function($elem, returnError) {
 				}
 				return true;
 				break;
+			case 'date':
+				if(!readonly && (required || val.length > 0)){
+					try{ checkDate($elem); }
+					catch(e){ return formatError(e); }
+				}
+				return true;
+				break;
+				
+				
+				
+				
+				
 				
 			/*
 			case 'datetime':
 				if(!readonly && (required || val.length > 0)){ return !this.validateDateTime($elem); }
-				return true;
-				break;
-			case 'date':
-				if(!readonly && (required || val.length > 0)){ return !this.validateDate($elem); }
 				return true;
 				break;
 			case 'time':
@@ -880,28 +888,109 @@ function checkMonth($input){ //YYYY-MM
 	function spanMonths(base, val){
 		return ((val[0]-base[0]) * 12) - base[1] + val[1];
 	}
+}
+function gregorianMonth(val) {
+	var year = parseInt(val[1],10),
+		month = parseInt(val[2],10);
+
+	if(1 > year || 1 > month || month > 12){
+		return false;
+	}
+
+	return [year, month];
+}
+/**
+* This function checks if the field's value is a valid date, optionally within a range.
+* The date string must contain 4 digits for the year, followed by a dash, followed by two month digits, ranging from 01 to 12, followed by a dash, followed by two day digits, ranging from 01 and 31.
+* __The date input supports both a min and a max date. These strings must be valid date strings.__
+* The date input also supports a step attribute, which is an integer describing how many days one should step.
+*
+* @method checkMonth
+* @private
+*/
+function checkDate($input){ //YYYY-MM-DD
+	if($input.selector !== undefined) $input = $input[0];
+
+	var val       = $input.value,
+	    max       = attr($input, 'max'),
+	    min       = attr($input, 'min'),
+		step      = attr($input, 'step'),
+		basestep  = [1970,1,1], //Default step base is 1970-01
+	    regex     = /^(\d{4})\-(\d{2})\-(\d{2})$/,
+		tDate;
+			
+	if(USE_SANITATION) {
+		val = trim(val);
+		if(max) max = trim(max);
+		if(min) min = trim(min);
+		if(step) step = trim(step);
+	}
+
+	if(!regex.test(val)){ throw {type: 'typeMismatch', msg: 'This is not a valid date string. e.g. "YYYY-MM-DD"'}; }
 	
-	function gregorianMonth(val) {
-		var year = parseInt(val[1],10),
-			month = parseInt(val[2],10);
+	val = gregorianDate(val.match(regex)); //Match passes an array with four args
 	
-		if(1 > year || 1 > month || month > 12){
-			return false;
+	if(val && val.length === 3) {
+		//Val in milliseconds since epoch
+		//Must subtract 1 from val[1] because months are zero based. e.g. January = '0';
+		tDate = new Date(val[0],(val[1]-1),val[2]).getTime();
+		//Check Max Date
+		if(regex.test(max)) {
+			max = gregorianDate(max.match(regex));
+			if((max && max.length === 3) && (new Date(max[0],(max[1]-1),max[2]).getTime() < tDate)){
+				throw {type: 'rangeOverflow', msg: 'This date is past the maximum date ('+pad(4, max[0])+'-'+pad(2, max[1])+'-'+pad(2, max[2])+').'};
+			}
+			basestep = max;
 		}
+		//Check Min Date
+		if(regex.test(min)) {
+			min = gregorianDate(min.match(regex));
+			if((max && max.length === 3) && (new Date(min[0],(min[1]-1),min[2]).getTime() > tDate)){
+				throw {type: 'rangeUnderflow', msg: 'This date is sooner than the minimum date ('+pad(4, min[0])+'-'+pad(2, min[1])+'-'+pad(2, min[2])+').'};
+			}
+			basestep = min;
+		}
+		//Check Step
+		if(/^\d+$/.test(step)){
+			step = parseInt(step, 10);
+
+			//Basestep is 1970-01-01 unless the following.
+			//If max is present, it is the basestep unless min is present.
+			//If min is present, it is the basestep.
+			if(spanDays(basestep, val) % step !== 0){
+				throw {type: 'stepMismatch', msg: 'This date is not a valid step ('+step+') of the base date ('+pad(4, basestep[0])+'-'+pad(2, basestep[1])+'-'+pad(2, basestep[2])+').'};
+			}
+		}
+		
+		return;
+	}
 	
-		return [year, month];
+	throw {type: 'typeMismatch', msg: 'This is not a valid date string. e.g. "YYYY-MM-DD"'};
+
+	function spanDays(base, val){
+		//Determine amount of weeks in between span of years
+		//86400000 = milliseconds in a day.
+		return (new Date(base[0],(base[1]-1),base[2]).getTime() - new Date(val[0],(val[1]-1),val[2]).getTime()) / 86400000;
 	}
 }
+function gregorianDate(val) {
+	var year,
+		month,
+		day = parseInt(val[3],10);
+		
+	//Check to see if month year string is valid.
+	val = gregorianMonth(val);
+	if(!val) { return false; }
+	year = val[0];
+	month = val[1];
+	
+	//Check day to make sure it's valid for the year.
+	if(1 > day || day > 31 || (day > 30 && (month === 4 || month === 6 || month === 9 || month === 11)) || (month === 2 && (day > 29 || (day > 28 && !isLeapYear(year))))){
+		return false;
+	}
 
-
-
-
-
-
-
-
-
-
+	return [year, month, day];
+}
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // RegX Private Parts //////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
