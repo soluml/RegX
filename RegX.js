@@ -1093,7 +1093,10 @@ function addEvent(obj, type, fn){
 //Remove event handlers
 function removeEvent(obj, type, fn){
   if ( obj.detachEvent){
-    obj.detachEvent('on'+type, obj[type+fn]);
+    //Will be undefined if an event wasn't previously set.
+	if(typeof obj[type+fn] === 'function'){
+		obj.detachEvent('on'+type, obj[type+fn]);
+	}
     obj[type+fn] = null;
   } else
     obj.removeEventListener(type, fn, false);
