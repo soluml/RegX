@@ -371,6 +371,13 @@ RegX.checkValidity = function($elem, returnError) {
 				}
 				return true;
 				break;
+			case 'time':
+				if(!readonly && (required || val.length > 0)){
+					try{ checkTime($elem); }
+					catch(e){ return formatError(e); }
+				}
+				return true;
+				break;
 				
 				
 				
@@ -380,10 +387,6 @@ RegX.checkValidity = function($elem, returnError) {
 			/*
 			case 'datetime':
 				if(!readonly && (required || val.length > 0)){ return !this.validateDateTime($elem); }
-				return true;
-				break;
-			case 'time':
-				if(!readonly && (required || val.length > 0)){ return !this.validateTime($elem); }
 				return true;
 				break;
 			case 'datetime-local':
@@ -734,12 +737,13 @@ function checkRange($input) {
 function checkWeek($input){ //YYYY-"W"WW
 	if($input.selector !== undefined) $input = $input[0];
 
-	var val       = $input.value,
-	    max       = attr($input, 'max'),
-	    min       = attr($input, 'min'),
-		step      = attr($input, 'step'),
-		basestep  = [1970,1], //Default step base is 1970-W01
-	    regex     = /^(\d{4})\-W(\d{2})$/;
+	var val         = $input.value,
+	    max         = attr($input, 'max'),
+	    min         = attr($input, 'min'),
+		step        = attr($input, 'step'),
+		basestep    = [1970,1], //Default step base is 1970-W01
+		defaultstep = 1,
+	    regex       = /^(\d{4})\-W(\d{2})$/;
 			
 	if(USE_SANITATION) {
 		val = trim(val);
@@ -753,13 +757,13 @@ function checkWeek($input){ //YYYY-"W"WW
 	val = gregorianWeek(val.match(regex)); //Match passes an array with three args
 
 	if(val && val.length === 2) {
-
+		basestep = val;
+		
 		if(regex.test(max)) {
 			max = gregorianWeek(max.match(regex));
 			if((max && max.length === 2) && max[0] < val[0] || (max[0] === val[0] && max[1] < val[1])){
 				throw {type: 'rangeOverflow', msg: 'This week date is past the maximum week date ('+pad(4, max[0])+'-'+pad(2, max[1])+').'};
 			}
-			basestep = max;
 		}
 
 		if(regex.test(min)) {
@@ -769,12 +773,13 @@ function checkWeek($input){ //YYYY-"W"WW
 			}
 			basestep = min;
 		}
-
+		
 		//Check Step
-		if(/^\d+$/.test(step)){
-			step = parseInt(step, 10);
+		if(step.toString().toLowerCase() !== 'any'){
+			if(!/^\d+$/.test(step)){ step = defaultstep; }
+			else { step = parseInt(step, 10); }
 			//Basestep is 1970-W01 unless the following.
-			//If max is present, it is the basestep unless min is present.
+			//If val is present, it is the basestep unless min is present.
 			//If min is present, it is the basestep.
 			if(spanWeeks(basestep, val) % step !== 0){
 				throw {type: 'stepMismatch', msg: 'This week date is not a valid step ('+step+') of the base week date ('+pad(4, basestep[0])+'-'+pad(2, basestep[1])+').'};
@@ -836,12 +841,13 @@ function checkWeek($input){ //YYYY-"W"WW
 function checkMonth($input){ //YYYY-MM
 	if($input.selector !== undefined) $input = $input[0];
 
-	var val       = $input.value,
-	    max       = attr($input, 'max'),
-	    min       = attr($input, 'min'),
-		step      = attr($input, 'step'),
-		basestep  = [1970,1], //Default step base is 1970-01
-	    regex     = /^(\d{4})\-(\d{2})$/;
+	var val         = $input.value,
+	    max         = attr($input, 'max'),
+	    min         = attr($input, 'min'),
+		step        = attr($input, 'step'),
+		basestep    = [1970,1], //Default step base is 1970-01
+		defaultstep = 1,
+	    regex       = /^(\d{4})\-(\d{2})$/;
 			
 	if(USE_SANITATION) {
 		val = trim(val);
@@ -855,13 +861,14 @@ function checkMonth($input){ //YYYY-MM
 	val = gregorianMonth(val.match(regex)); //Match passes an array with three args
 
 	if(val && val.length === 2) {
+		basestep = val;
+		
 		//Check Max Month
 		if(regex.test(max)) {
 			max = gregorianMonth(max.match(regex));
 			if((max && max.length === 2) && max[0] < val[0] || (max[0] === val[0] && max[1] < val[1])){
 				throw {type: 'rangeOverflow', msg: 'This month is past the maximum month ('+pad(4, max[0])+'-'+pad(2, max[1])+').'};
 			}
-			basestep = max;
 		}
 		//Check Min Month
 		if(regex.test(min)) {
@@ -871,10 +878,12 @@ function checkMonth($input){ //YYYY-MM
 			}
 			basestep = min;
 		}
+		
 		//Check Step
-		if(/^\d+$/.test(step)){
-			step = parseInt(step, 10);
-
+		if(step.toString().toLowerCase() !== 'any'){
+			if(!/^\d+$/.test(step)){ step = defaultstep; }
+			else { step = parseInt(step, 10); }
+			
 			//Basestep is 1970-01 unless the following.
 			//If max is present, it is the basestep unless min is present.
 			//If min is present, it is the basestep.
@@ -902,6 +911,7 @@ function gregorianMonth(val) {
 
 	return [year, month];
 }
+
 /**
 * This function checks if the field's value is a valid date, optionally within a range.
 * The date string must contain 4 digits for the year, followed by a dash, followed by two month digits, ranging from 01 to 12, followed by a dash, followed by two day digits, ranging from 01 and 31.
@@ -914,12 +924,13 @@ function gregorianMonth(val) {
 function checkDate($input){ //YYYY-MM-DD
 	if($input.selector !== undefined) $input = $input[0];
 
-	var val       = $input.value,
-	    max       = attr($input, 'max'),
-	    min       = attr($input, 'min'),
-		step      = attr($input, 'step'),
-		basestep  = [1970,1,1], //Default step base is 1970-01
-	    regex     = /^(\d{4})\-(\d{2})\-(\d{2})$/,
+	var val         = $input.value,
+	    max         = attr($input, 'max'),
+	    min         = attr($input, 'min'),
+		step        = attr($input, 'step'),
+		basestep    = [1970,1,1], //Default step base is 1970-01
+		defaultstep = 1,
+	    regex       = /^(\d{4})\-(\d{2})\-(\d{2})$/,
 		tDate;
 			
 	if(USE_SANITATION) {
@@ -934,6 +945,8 @@ function checkDate($input){ //YYYY-MM-DD
 	val = gregorianDate(val.match(regex)); //Match passes an array with four args
 	
 	if(val && val.length === 3) {
+		basestep = val;
+		
 		//Val in milliseconds since epoch
 		//Must subtract 1 from val[1] because months are zero based. e.g. January = '0';
 		tDate = new Date(val[0],(val[1]-1),val[2]).getTime();
@@ -943,20 +956,20 @@ function checkDate($input){ //YYYY-MM-DD
 			if((max && max.length === 3) && (new Date(max[0],(max[1]-1),max[2]).getTime() < tDate)){
 				throw {type: 'rangeOverflow', msg: 'This date is past the maximum date ('+pad(4, max[0])+'-'+pad(2, max[1])+'-'+pad(2, max[2])+').'};
 			}
-			basestep = max;
 		}
 		//Check Min Date
 		if(regex.test(min)) {
 			min = gregorianDate(min.match(regex));
-			if((max && max.length === 3) && (new Date(min[0],(min[1]-1),min[2]).getTime() > tDate)){
+			if((min && min.length === 3) && (new Date(min[0],(min[1]-1),min[2]).getTime() > tDate)){
 				throw {type: 'rangeUnderflow', msg: 'This date is sooner than the minimum date ('+pad(4, min[0])+'-'+pad(2, min[1])+'-'+pad(2, min[2])+').'};
 			}
 			basestep = min;
 		}
 		//Check Step
-		if(/^\d+$/.test(step)){
-			step = parseInt(step, 10);
-
+		if(step.toString().toLowerCase() !== 'any'){
+			if(!/^\d+$/.test(step)){ step = defaultstep; }
+			else { step = parseInt(step, 10); }
+	
 			//Basestep is 1970-01-01 unless the following.
 			//If max is present, it is the basestep unless min is present.
 			//If min is present, it is the basestep.
@@ -994,6 +1007,103 @@ function gregorianDate(val) {
 
 	return [year, month, day];
 }
+
+/**
+* This function checks if the field's value is a valid time, optionally within a range.
+* The time string must contain 2 digits for the hour ranging from 00 to 23, followed by a colon, followed by 2 minute digits, ranging from 00 to 59, optionally followed by a colon and two seconds digits, ranging from 00 to 59, optionally followed by a period and from one to three digits representing fractional seconds.
+* __The time input supports both a min and a max time. These strings must be valid time strings.__
+* The time input also supports a step attribute, which is an integer describing how many seconds one should step.
+*
+* @method checkMonth
+* @private
+*/
+function checkTime($input){ //HH:MM{:SS{.F{F{F}}}}
+	if($input.selector !== undefined) $input = $input[0];
+
+	var val          = $input.value,
+	    max          = attr($input, 'max'),
+	    min          = attr($input, 'min'),
+		step         = attr($input, 'step'),
+		defaultstep  = 60, //Default step is 60 seconds
+		basestep,
+	    regex        = /^(\d{2}):(\d{2})(:(\d{2})(\.(\d{1,3}))?)?$/,
+		tDate;
+					
+	if(USE_SANITATION) {
+		val = trim(val);
+		if(max) max = trim(max);
+		if(min) min = trim(min);
+		if(step) step = trim(step);
+	}
+	
+	if(!regex.test(val)){ throw {type: 'typeMismatch', msg: 'This is not a valid time string. e.g. "HH:MM:SS.FFF" or "HH:MM:SS" or "HH:MM"'}; }
+	
+	val = gregorianTime(val.match(regex));
+	
+	if(val && val.length === 4) { //Match passes an array with 7,5 or 3 args
+		basestep = val;
+		tDate = new Date(1970,0,1,val[0],val[1],val[2],val[3]).getTime();
+	
+		//Check Max Time
+		if(regex.test(max)) {
+			max = gregorianTime(max.match(regex));
+			if((max && max.length === 4) && (new Date(1970,0,1,max[0],max[1],max[2],max[3]).getTime() < tDate)){
+				throw {type: 'rangeOverflow', msg: 'This time is past the maximum time ('+pad(2, max[0])+':'+pad(2, max[1])+':'+pad(2, max[2])+'.'+pad(3, max[3], true)+').'};
+			}
+		}
+		//Check Min Date
+		if(regex.test(min)) {
+			min = gregorianTime(min.match(regex));
+			if((min && min.length === 4) && (new Date(1970,0,1,min[0],min[1],min[2],min[3]).getTime() > tDate)){
+				throw {type: 'rangeUnderflow', msg: 'This time is sooner than the minimum time ('+pad(2, min[0])+':'+pad(2, min[1])+':'+pad(2, min[2])+'.'+pad(3, min[3], true)+').'};
+			}
+			basestep = min;
+		}
+		//Check Step
+		if(step.toString().toLowerCase() !== 'any'){
+			if(!/^\d+$/.test(step)){ step = defaultstep; }
+			else { step = parseInt(step, 10); }
+			
+			//Basestep is the value unless the min is present.
+			if(spanTime(basestep, val) % step !== 0){
+				throw {type: 'stepMismatch', msg: 'This time is not a valid step ('+step+') of the base time ('+pad(2, basestep[0])+':'+pad(2, basestep[1])+':'+pad(2, basestep[2])+'.'+pad(3, basestep[3], true)+').'};
+			}
+			
+		}
+	
+		return;
+	}
+	
+	throw {type: 'typeMismatch', msg: 'This is not a valid time string. e.g. "HH:MM:SS.FFF" or "HH:MM:SS" or "HH:MM"'};
+	
+	function spanTime(base, val){
+		//Determine amount of time in between span of times
+		//1000 = milliseconds in a second.
+		return (new Date(1970,0,1,base[0],base[1],base[2],base[3]).getTime() - new Date(1970,0,1,val[0],val[1],val[2],val[3]).getTime()) / 1000;
+	}
+}
+function gregorianTime(val){
+	var hour     = parseInt(val[1],10),
+		minute   = parseInt(val[2],10),
+		second   = (typeof val[4] !== 'undefined' ? parseInt(val[4],10) : 0),
+		fraction = (typeof val[6] !== 'undefined' ? parseInt(pad(3, val[6], true),10) : 0);
+	
+	//Check day to make sure it's valid for the year.
+	if(hour < 0 || hour > 23 || minute < 0 || minute > 59 || second < 0 || second > 59 || fraction < 0 || fraction > 999){
+		return false;
+	}
+		
+	return [hour,minute,second,fraction];
+}
+
+
+
+
+
+
+
+
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // RegX Private Parts //////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
@@ -1039,9 +1149,10 @@ function getMessage($elem) {
 	return '';
 }
 //Add zeros for strings
-function pad(n, str){
+function pad(n, str, tr){
 	if(typeof str !== 'string'){ str = str + ''; }
-	while(str.length < n){ str = '0' + str; }
+	if(tr){ while(str.length < n){ str = str + '0'; } }
+	else{ while(str.length < n){ str = '0' + str; } }
 	return str;
 }
 //Utility function for date fields to determine leap year.
