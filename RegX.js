@@ -121,12 +121,14 @@ RegX.isError = false;
 
 /**
 * On success callback method. Either this function or "onFailure" are called on form submission, depending on the results of field validity.
+* __This callback is passed one argument, which is the event object.__
+* __Handling the onsubmit event is taken care of for you. If you want to stop the form from submitting, simply return false.__
 *
 * You should redefine to fit your purpose:
 @example
-		RegX.onSuccess = function(){
+		RegX.onSuccess = function(e){
 			alert('No problems');
-			return true; //Return's to the onsubmit dom event.
+			return; //Return's to the submission function which prevents the dom event if you return false.
 		};
 *
 * @event onSuccess
@@ -135,16 +137,17 @@ RegX.onSuccess = function(){};
 
 /**
 * On failure callback method. Either this function or "onSuccess" are called on form submission, depending on the results of field validity.
-* __This callback is passed one argument, which is the ERRORS array filled with field objects.__
+* __This callback is passed two arguments, the first is the event object and the second is the ERRORS array filled with field objects.__
+* __Handling the onsubmit event is taken care of for you. If you want to stop the form from submitting, simply return false.__
 *
 * You should redefine to fit your purpose:
 @example
-		RegX.onFailure = function(errors){
+		RegX.onFailure = function(e, ERR){
 			alert('Big problems');
-			for(var i = 0; i < errors.length; i++){
-				console.log(errors[i].name);
+			for(var i = 0; i < ERR.length; i++){
+				alert(ERR[i].error_msg);
 			}
-			return false; //Return's to the onsubmit dom event.
+			return false; //Return's to the submission function which prevents the dom event if you return false.
 		};
 *
 * @event onFailure
@@ -1049,6 +1052,7 @@ function isLeapYear(y){
 function onSubmitRegX(e){
 	var $frm = e.target,
 		novalidate = false,
+		returnt,
 		i;
 	
 	//If submit button had formnovalidate set
@@ -1068,9 +1072,20 @@ function onSubmitRegX(e){
 			//There were errors...
 			if(ERRORS.length > 0){
 				RegX.isError = true;
-				RegX.onFailure(e, ERRORS);
+				returnt = RegX.onFailure(e, ERRORS);
+			} else {
+				returnt = RegX.onSuccess(e);
 			}
-			RegX.onSuccess(e);
+			
+			//If the RegX.onSuccess or onFailure events returned false, stop the form submission
+			if(returnt === false){
+				if (e.preventDefault) { 
+					e.preventDefault(); 
+				} else { 
+					e.returnValue = false;
+				}
+				return false;	
+			}
 		}
 	}
 	
