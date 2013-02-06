@@ -7,8 +7,8 @@
         "logo": "/regx.png"
     },
     "files": {
-        "C:\\Users\\Ben\\Dropbox\\GitHub\\RegX\\RegX.js": {
-            "name": "C:\\Users\\Ben\\Dropbox\\GitHub\\RegX\\RegX.js",
+        "C:\\Users\\bens\\Documents\\GitHub\\RegX\\RegX.js": {
+            "name": "C:\\Users\\bens\\Documents\\GitHub\\RegX\\RegX.js",
             "modules": {
                 "RegX": 1
             },
@@ -29,9 +29,9 @@
             "fors": {},
             "namespaces": {},
             "tag": "main",
-            "file": "C:\\Users\\Ben\\Dropbox\\GitHub\\RegX\\RegX.js",
+            "file": "C:\\Users\\bens\\Documents\\GitHub\\RegX\\RegX.js",
             "line": 17,
-            "description": "RegX.js\nRegX.js is a HTML5 input validation polyfill that helps you validate all W3C input types.\nKudos to Jonas Raoni Soares Silva for writing Big Number, making it easy to do to precision math with floats for the number/range inputs.\n\nCopyright 2012 Benjamin Solum (@soluml)\nReleased under the Creative Commons Attribution-ShareAlike (CC BY-SA) License.\n\nauthor:  Benjamin Solum\nversion: 0.3\nurl:     http://www.soluml.com/RegX\nsource:  https://github.com/soluml/RegX",
+            "description": "RegX.js\nRegX.js is a HTML5 input validation polyfill that helps you validate all W3C input types.\nKudos to Jonas Raoni Soares Silva for writing Big Number, making it easy to do to precision math with floats for the number/range inputs.\n\nCopyright 2013 Benjamin Solum (@soluml)\nReleased under the Creative Commons Attribution-ShareAlike (CC BY-SA) License.\n\nauthor:  Benjamin Solum\nversion: 0.4\nurl:     http://www.soluml.com/RegX/\nsource:  https://regx.github.com/",
             "itemtype": "main"
         }
     },
@@ -46,13 +46,13 @@
             "extension_for": [],
             "module": "RegX",
             "namespace": "",
-            "file": "C:\\Users\\Ben\\Dropbox\\GitHub\\RegX\\RegX.js",
+            "file": "C:\\Users\\bens\\Documents\\GitHub\\RegX\\RegX.js",
             "line": 17
         }
     },
     "classitems": [
         {
-            "file": "C:\\Users\\Ben\\Dropbox\\GitHub\\RegX\\RegX.js",
+            "file": "C:\\Users\\bens\\Documents\\GitHub\\RegX\\RegX.js",
             "line": 22,
             "description": "Sanitizing our inputs means stripping out white space as the spec requires or setting replacement values for incompatible ones. Some browsers opt not to sanitize in cases where they should before validating.\nAlso, some inputs only require the trimming of linebreaks (not white space), but that is dependant on the input.\n__If you opt to sanitize your front end, remember that the values in the backend also need to be sanitized!__",
             "itemtype": "attribute",
@@ -70,7 +70,7 @@
             "module": "RegX"
         },
         {
-            "file": "C:\\Users\\Ben\\Dropbox\\GitHub\\RegX\\RegX.js",
+            "file": "C:\\Users\\bens\\Documents\\GitHub\\RegX\\RegX.js",
             "line": 40,
             "description": "The spec declares a certain way to validate all inputs. This is built in to the core of RegX. However, the spec isn't always the ideal way to validate things.\nFor example, there are better regular expressions to validate an email address against.\nAnother example is that for the datetime input, the spec allows for non-existant timezones: e.x. +23:59.\nSome browsers themselves opt to use better validation for fields than required in the spec, Chrome for example does a better job of validating URL's. \nBasically, USE_BETTER_VALIDATION parameter tells RegX to be \"better\" than the spec.\n__This parameter impacts inputs: email,url,datetime,color and any input with maxlength attribute set.__",
             "itemtype": "attribute",
@@ -88,7 +88,7 @@
             "module": "RegX"
         },
         {
-            "file": "C:\\Users\\Ben\\Dropbox\\GitHub\\RegX\\RegX.js",
+            "file": "C:\\Users\\bens\\Documents\\GitHub\\RegX\\RegX.js",
             "line": 61,
             "description": "__*NOT YET IMPLEMENTED!!!!!*__\nFor use in conjunction with a server side validation method.\nInstead of using JavaScript to validate on every form submission, we'll perform an ajax call to validate on the server.\nThe server should return a valid RegX error object.",
             "itemtype": "attribute",
@@ -107,7 +107,7 @@
             "module": "RegX"
         },
         {
-            "file": "C:\\Users\\Ben\\Dropbox\\GitHub\\RegX\\RegX.js",
+            "file": "C:\\Users\\bens\\Documents\\GitHub\\RegX\\RegX.js",
             "line": 81,
             "description": "This array contains all field objects that pertain to fields in error from the last form submission and is passed to the RegX.onFailure callback method. __The ERRRORS array is only accessible inside of the callback.__\n\n\nExample array with error objects:",
             "itemtype": "property",
@@ -123,8 +123,8 @@
             "module": "RegX"
         },
         {
-            "file": "C:\\Users\\Ben\\Dropbox\\GitHub\\RegX\\RegX.js",
-            "line": 111,
+            "file": "C:\\Users\\bens\\Documents\\GitHub\\RegX\\RegX.js",
+            "line": 113,
             "description": "Boolean check if there are errors in the last submitted form.",
             "itemtype": "property",
             "name": "isError",
@@ -134,11 +134,11 @@
             "module": "RegX"
         },
         {
-            "file": "C:\\Users\\Ben\\Dropbox\\GitHub\\RegX\\RegX.js",
-            "line": 120,
-            "description": "On success callback method. Either this function or \"onFailure\" are called on form submission, depending on the results of field validity.\n\nYou should redefine to fit your purpose:",
+            "file": "C:\\Users\\bens\\Documents\\GitHub\\RegX\\RegX.js",
+            "line": 122,
+            "description": "On success callback method. Either this function or \"onFailure\" are called on form submission, depending on the results of field validity.\n__This callback is passed one argument, which is the event object.__\n__Handling the onsubmit event is taken care of for you. If you want to stop the form from submitting, simply return false.__\n\nYou should redefine to fit your purpose:",
             "example": [
-                "\n\t\tRegX.onSuccess = function(){\n\t\t\talert('No problems');\n\t\t\treturn true; //Return's to the onsubmit dom event.\n\t\t};"
+                "\n\t\tRegX.onSuccess = function(e){\n\t\t\talert('No problems');\n\t\t\treturn; //Return's to the submission function which prevents the dom event if you return false.\n\t\t};"
             ],
             "itemtype": "event",
             "name": "onSuccess",
@@ -146,11 +146,11 @@
             "module": "RegX"
         },
         {
-            "file": "C:\\Users\\Ben\\Dropbox\\GitHub\\RegX\\RegX.js",
-            "line": 134,
-            "description": "On failure callback method. Either this function or \"onSuccess\" are called on form submission, depending on the results of field validity.\n__This callback is passed one argument, which is the ERRORS array filled with field objects.__\n\nYou should redefine to fit your purpose:",
+            "file": "C:\\Users\\bens\\Documents\\GitHub\\RegX\\RegX.js",
+            "line": 138,
+            "description": "On failure callback method. Either this function or \"onSuccess\" are called on form submission, depending on the results of field validity.\n__This callback is passed two arguments, the first is the event object and the second is the ERRORS array filled with field objects.__\n__Handling the onsubmit event is taken care of for you. If you want to stop the form from submitting, simply return false.__\n\nYou should redefine to fit your purpose:",
             "example": [
-                "\n\t\tRegX.onFailure = function(errors){\n\t\t\talert('Big problems');\n\t\t\tfor(var i = 0; i < errors.length; i++){\n\t\t\t\tconsole.log(errors[i].name);\n\t\t\t}\n\t\t\treturn false; //Return's to the onsubmit dom event.\n\t\t};"
+                "\n\t\tRegX.onFailure = function(e, ERR){\n\t\t\talert('Big problems');\n\t\t\tfor(var i = 0; i < ERR.length; i++){\n\t\t\t\talert(ERR[i].error_msg);\n\t\t\t}\n\t\t\treturn false; //Return's to the submission function which prevents the dom event if you return false.\n\t\t};"
             ],
             "itemtype": "event",
             "name": "onFailure",
@@ -158,8 +158,20 @@
             "module": "RegX"
         },
         {
-            "file": "C:\\Users\\Ben\\Dropbox\\GitHub\\RegX\\RegX.js",
-            "line": 152,
+            "file": "C:\\Users\\bens\\Documents\\GitHub\\RegX\\RegX.js",
+            "line": 157,
+            "description": "This function loops through each form and binds methods to the submit event. It also loops through the submit buttons and binds click events to those.\nThis function is called at window.onload by default.\n__If you add additional forms through JavaScript or AJAX, this method must be called again to ensure validation of that form.__",
+            "example": [
+                "\n   RegX.init();"
+            ],
+            "itemtype": "method",
+            "name": "init",
+            "class": "RegX",
+            "module": "RegX"
+        },
+        {
+            "file": "C:\\Users\\bens\\Documents\\GitHub\\RegX\\RegX.js",
+            "line": 193,
             "description": "__This function returns TRUE if the field is valid and FALSE if not.__ This mirrors native browser implementation.\nUse this if you want to see if the field is valid, taking into consideration the DOM.\nIf you want to match an input's value, irregardless of whether it's immutable, use the checkRequired and check[\"Input\"] functions.\n__If you want to check individual select or textarea elements, use this function.__",
             "example": [
                 "\n   RegX.checkValidity(document.getElementById('ELEMENT_ID'));",
@@ -172,240 +184,161 @@
                     "name": "$elem",
                     "description": "The field you want to check the validity of. If jQuery selector grabs more than one element, the elements are validated as a set.",
                     "type": "JQuery or DOM Element"
+                },
+                {
+                    "name": "returnError",
+                    "description": "Set this to true if you want to be returned an error object versus a boolean false.",
+                    "type": "Boolean"
                 }
             ],
             "return": {
-                "description": "Returns true if element is valid and false if not. If jQuery selector or node list matches multiple elements, this method returns true if all elements are valid and false otherwise.",
-                "type": "Boolean"
+                "description": "Returns true if element is valid and false if not. If jQuery selector or node list matches multiple elements, this method returns true if all elements are valid and false otherwise. If returnError is set to true, returns true if element(s) are valid and either returns a single Object or in case of multiple elements returns an array of error objects.",
+                "type": "Boolean|Object"
             },
             "class": "RegX",
             "module": "RegX"
         },
         {
-            "file": "C:\\Users\\Ben\\Dropbox\\GitHub\\RegX\\RegX.js",
-            "line": 317,
+            "file": "C:\\Users\\bens\\Documents\\GitHub\\RegX\\RegX.js",
+            "line": 423,
             "description": "This function checks if the field is valid, assuming that the field IS required and only observing that fact.",
-            "example": [
-                "\n   RegX.checkValidity(document.getElementById('ELEMENT_ID'));",
-                "\n   RegX.checkValidity(jQuery('input:eq(0)'));"
-            ],
             "itemtype": "method",
             "name": "checkRequired",
-            "params": [
-                {
-                    "name": "$input",
-                    "description": "The input you want to check the validity of. If jQuery selector grabs more than one element, only the first element is used.",
-                    "type": "JQuery or DOM Element"
-                }
-            ],
-            "return": {
-                "description": "Returns true if element is valid and false if not.",
-                "type": "Boolean"
-            },
+            "access": "private",
+            "tagname": "",
             "class": "RegX",
             "module": "RegX"
         },
         {
-            "file": "C:\\Users\\Ben\\Dropbox\\GitHub\\RegX\\RegX.js",
-            "line": 361,
+            "file": "C:\\Users\\bens\\Documents\\GitHub\\RegX\\RegX.js",
+            "line": 460,
             "description": "This function checks if the field is valid based on it's pattern attribute. __If no pattern attribute is supplied, this method returns false!__\nIf specified, the attribute's value must match the JavaScript Pattern production ([ECMA262]). The pattern is compiled with the \"global, ignoreCase, and multiline flags disabled\".",
-            "example": [
-                "\n   RegX.checkPattern(document.getElementById('ELEMENT_ID'));",
-                "\n   RegX.checkPattern(jQuery('input:eq(0)'));"
-            ],
             "itemtype": "method",
             "name": "checkPattern",
-            "params": [
-                {
-                    "name": "$input",
-                    "description": "The input you want to check the validity of. If jQuery selector grabs more than one element, only the first element is used.",
-                    "type": "JQuery or DOM Element"
-                }
-            ],
-            "return": {
-                "description": "Returns true if element is valid and false if not.",
-                "type": "Boolean"
-            },
+            "access": "private",
+            "tagname": "",
             "class": "RegX",
             "module": "RegX"
         },
         {
-            "file": "C:\\Users\\Ben\\Dropbox\\GitHub\\RegX\\RegX.js",
-            "line": 381,
+            "file": "C:\\Users\\bens\\Documents\\GitHub\\RegX\\RegX.js",
+            "line": 474,
             "description": "This function checks if the field's value exceeds the max length based on it's maxlength attribute. __If no maxlength attribute is supplied, this method returns false!__\nIf maxlength is specified as a float, the maxlength value is floored. Maxlength value must be a number >= 0 or else this property is effectively ignored.",
-            "example": [
-                "\n   RegX.checkMaxLength(document.getElementById('ELEMENT_ID'));",
-                "\n   RegX.checkMaxLength(jQuery('input:eq(0)'));"
-            ],
             "itemtype": "method",
             "name": "checkMaxLength",
-            "params": [
-                {
-                    "name": "$input",
-                    "description": "The input you want to check the validity of. If jQuery selector grabs more than one element, only the first element is used.",
-                    "type": "JQuery or DOM Element"
-                }
-            ],
-            "return": {
-                "description": "Returns true if element is valid and false if not.",
-                "type": "Boolean"
-            },
+            "access": "private",
+            "tagname": "",
             "class": "RegX",
             "module": "RegX"
         },
         {
-            "file": "C:\\Users\\Ben\\Dropbox\\GitHub\\RegX\\RegX.js",
-            "line": 400,
+            "file": "C:\\Users\\bens\\Documents\\GitHub\\RegX\\RegX.js",
+            "line": 488,
+            "description": "This function checks selects in more detail for various browsers.",
+            "itemtype": "method",
+            "name": "checkSelect",
+            "access": "private",
+            "tagname": "",
+            "class": "RegX",
+            "module": "RegX"
+        },
+        {
+            "file": "C:\\Users\\bens\\Documents\\GitHub\\RegX\\RegX.js",
+            "line": 520,
             "description": "This function checks if the field's value is a valid color.\n__The input color control shouldn't allow you to set the color to anything BUT a color.__\nIn a modern browser, checkValidity() should ALWAYS return true, because the default value for anything other than a valid hex color, is #000000.\nWhen the setting RegX.USE_BETTER_VALIDATION is set to true, RegX allows the use of SVG color keywords or simple colors (ex. aliceblue or #f00).",
-            "example": [
-                "\n   RegX.checkColor(document.getElementById('ELEMENT_ID'));",
-                "\n   RegX.checkColor(jQuery('input:eq(0)'));"
-            ],
             "itemtype": "method",
             "name": "checkColor",
-            "params": [
-                {
-                    "name": "$input",
-                    "description": "The input you want to check the validity of. If jQuery selector grabs more than one element, only the first element is used.",
-                    "type": "JQuery or DOM Element"
-                }
-            ],
-            "return": {
-                "description": "Returns true if element is valid and false if not.",
-                "type": "Boolean"
-            },
+            "access": "private",
+            "tagname": "",
             "class": "RegX",
             "module": "RegX"
         },
         {
-            "file": "C:\\Users\\Ben\\Dropbox\\GitHub\\RegX\\RegX.js",
-            "line": 448,
+            "file": "C:\\Users\\bens\\Documents\\GitHub\\RegX\\RegX.js",
+            "line": 562,
             "description": "This function checks if the field's value is a valid email address.\nSpec: http://www.w3.org/TR/html5/states-of-the-type-attribute.html#e-mail-state-type-email\nThis method can use \"Better Validation\" based on  Arluison Guillaume's regex.",
-            "example": [
-                "\n   RegX.checkEmail(document.getElementById('ELEMENT_ID'));",
-                "\n   RegX.checkEmail(jQuery('input:eq(0)'));"
-            ],
             "itemtype": "method",
             "name": "checkEmail",
-            "params": [
-                {
-                    "name": "$input",
-                    "description": "The input you want to check the validity of. If jQuery selector grabs more than one element, only the first element is used.",
-                    "type": "JQuery or DOM Element"
-                }
-            ],
-            "return": {
-                "description": "Returns true if element is valid and false if not.",
-                "type": "Boolean"
-            },
+            "access": "private",
+            "tagname": "",
             "class": "RegX",
             "module": "RegX"
         },
         {
-            "file": "C:\\Users\\Ben\\Dropbox\\GitHub\\RegX\\RegX.js",
-            "line": 476,
+            "file": "C:\\Users\\bens\\Documents\\GitHub\\RegX\\RegX.js",
+            "line": 586,
             "description": "This function checks if the field's value is a valid URL.\nSpec: http://www.w3.org/TR/html5/states-of-the-type-attribute.html#url-state-type-url\nhttp://tools.ietf.org/html/rfc3986#section-3 - URI Must have a Scheme:\n\tScheme = ALPHA *( ALPHA / DIGIT / \"+\" / \"-\" / \".\" )\nThis method can use \"Better Validation\" to do deeper checking for ftp and http/https (as Chrome does).",
-            "example": [
-                "\n   RegX.checkURL(document.getElementById('ELEMENT_ID'));",
-                "\n   RegX.checkURL(jQuery('input:eq(0)'));"
-            ],
             "itemtype": "method",
             "name": "checkURL",
-            "params": [
-                {
-                    "name": "$input",
-                    "description": "The input you want to check the validity of. If jQuery selector grabs more than one element, only the first element is used.",
-                    "type": "JQuery or DOM Element"
-                }
-            ],
-            "return": {
-                "description": "Returns true if element is valid and false if not.",
-                "type": "Boolean"
-            },
+            "access": "private",
+            "tagname": "",
             "class": "RegX",
             "module": "RegX"
         },
         {
-            "file": "C:\\Users\\Ben\\Dropbox\\GitHub\\RegX\\RegX.js",
-            "line": 513,
+            "file": "C:\\Users\\bens\\Documents\\GitHub\\RegX\\RegX.js",
+            "line": 616,
             "description": "This function checks if the field's value is a valid number.\nSpecify the min, max, and step to control which numbers are available.",
-            "example": [
-                "\n   RegX.checkNumber(document.getElementById('ELEMENT_ID'));",
-                "\n   RegX.checkNumber(jQuery('input:eq(0)'));"
-            ],
             "itemtype": "method",
             "name": "checkNumber",
-            "params": [
-                {
-                    "name": "$input",
-                    "description": "The input you want to check the validity of. If jQuery selector grabs more than one element, only the first element is used.",
-                    "type": "JQuery or DOM Element"
-                }
-            ],
-            "return": {
-                "description": "Returns true if element is valid and false if not.",
-                "type": "Boolean"
-            },
+            "access": "private",
+            "tagname": "",
             "class": "RegX",
             "module": "RegX"
         },
         {
-            "file": "C:\\Users\\Ben\\Dropbox\\GitHub\\RegX\\RegX.js",
-            "line": 603,
+            "file": "C:\\Users\\bens\\Documents\\GitHub\\RegX\\RegX.js",
+            "line": 702,
             "description": "This function checks if the field's value is a valid number within a range.\nThe range input seems to be a different GUI on top of the number input type. If you look at the spec for input range, no matter what value you set, the browser should auto correct it for you.\n__Since the spec assumes always valid (unless somehow, you pass in a \"NaN\"), RegX assumes always valid (unless somehow, you pass in a \"NaN\").__ The control will literally not allow you to move outside the range.\nHowever, when USE_BETTER_VALIDATION is true, we treat range like a number and assume that it should be validated the same way.",
-            "example": [
-                "\n   RegX.checkRange(document.getElementById('ELEMENT_ID'));",
-                "\n   RegX.checkRange(jQuery('input:eq(0)'));"
-            ],
             "itemtype": "method",
             "name": "checkRange",
-            "params": [
-                {
-                    "name": "$input",
-                    "description": "The input you want to check the validity of. If jQuery selector grabs more than one element, only the first element is used.",
-                    "type": "JQuery or DOM Element"
-                }
-            ],
-            "return": {
-                "description": "Returns true if element is valid and false if not.",
-                "type": "Boolean"
-            },
+            "access": "private",
+            "tagname": "",
             "class": "RegX",
             "module": "RegX"
         },
         {
-            "file": "C:\\Users\\Ben\\Dropbox\\GitHub\\RegX\\RegX.js",
-            "line": 629,
-            "description": "This function checks if the field's value is a valid week optionally within a range.\nThe week string must contain 4 digits for the year, followed by a dash, followed by a capital W, followed by two week digits, ranging from 01 to 53.\n__The week input supports both a min and a max week. These strings must be valid week strings.__",
-            "example": [
-                "\n   RegX.checkWeek(document.getElementById('ELEMENT_ID'));",
-                "\n   RegX.checkWeek(jQuery('input:eq(0)'));"
-            ],
+            "file": "C:\\Users\\bens\\Documents\\GitHub\\RegX\\RegX.js",
+            "line": 725,
+            "description": "This function checks if the field's value is a valid week, optionally within a range.\nThe week string must contain 4 digits for the year, followed by a dash, followed by a capital W, followed by two week digits, ranging from 01 to 53.\n__The week input supports both a min and a max week. These strings must be valid week strings.__\nThe week input also supports a step attribute, which is an integer describing how many weeks one should step.",
             "itemtype": "method",
             "name": "checkWeek",
-            "params": [
-                {
-                    "name": "$input",
-                    "description": "The input you want to check the validity of. If jQuery selector grabs more than one element, only the first element is used.",
-                    "type": "JQuery or DOM Element"
-                }
-            ],
-            "return": {
-                "description": "Returns true if element is valid and false if not.",
-                "type": "Boolean"
-            },
+            "access": "private",
+            "tagname": "",
             "class": "RegX",
             "module": "RegX"
         },
         {
-            "file": "C:\\Users\\Ben\\Dropbox\\GitHub\\RegX\\RegX.js",
-            "line": 871,
+            "file": "C:\\Users\\bens\\Documents\\GitHub\\RegX\\RegX.js",
+            "line": 827,
+            "description": "This function checks if the field's value is a valid month, optionally within a range.\nThe month string must contain 4 digits for the year, followed by a dash, followed by two month digits, ranging from 01 to 12.\n__The month input supports both a min and a max month. These strings must be valid month strings.__\nThe month input also supports a step attribute, which is an integer describing how many months one should step.",
+            "itemtype": "method",
+            "name": "checkMonth",
+            "access": "private",
+            "tagname": "",
             "class": "RegX",
             "module": "RegX"
         },
         {
-            "file": "C:\\Users\\Ben\\Dropbox\\GitHub\\RegX\\RegX.js",
-            "line": 913,
+            "file": "C:\\Users\\bens\\Documents\\GitHub\\RegX\\RegX.js",
+            "line": 905,
+            "description": "This function checks if the field's value is a valid date, optionally within a range.\nThe date string must contain 4 digits for the year, followed by a dash, followed by two month digits, ranging from 01 to 12, followed by a dash, followed by two day digits, ranging from 01 and 31.\n__The date input supports both a min and a max date. These strings must be valid date strings.__\nThe date input also supports a step attribute, which is an integer describing how many days one should step.",
+            "itemtype": "method",
+            "name": "checkMonth",
+            "access": "private",
+            "tagname": "",
+            "class": "RegX",
+            "module": "RegX"
+        },
+        {
+            "file": "C:\\Users\\bens\\Documents\\GitHub\\RegX\\RegX.js",
+            "line": 1147,
+            "class": "RegX",
+            "module": "RegX"
+        },
+        {
+            "file": "C:\\Users\\bens\\Documents\\GitHub\\RegX\\RegX.js",
+            "line": 1189,
             "class": "RegX",
             "module": "RegX"
         }
@@ -413,11 +346,11 @@
     "warnings": [
         {
             "message": "Missing item type",
-            "line": " C:\\Users\\Ben\\Dropbox\\GitHub\\RegX\\RegX.js:871"
+            "line": " C:\\Users\\bens\\Documents\\GitHub\\RegX\\RegX.js:1147"
         },
         {
             "message": "Missing item type",
-            "line": " C:\\Users\\Ben\\Dropbox\\GitHub\\RegX\\RegX.js:913"
+            "line": " C:\\Users\\bens\\Documents\\GitHub\\RegX\\RegX.js:1189"
         }
     ]
 }
