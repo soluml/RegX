@@ -1118,11 +1118,10 @@ function gregorianTime(val){
 }
 
 /**
-* This function checks if the field's value is a valid datetime, optionally within a range.
-
-* The time string must contain 2 digits for the hour ranging from 00 to 23, followed by a colon, followed by 2 minute digits, ranging from 00 to 59, optionally followed by a colon and two seconds digits, ranging from 00 to 59, optionally followed by a period and from one to three digits representing fractional seconds.
-* __The time input supports both a min and a max time. These strings must be valid time strings.__
-* The time input also supports a step attribute, which is an integer describing how many seconds one should step.
+* This function checks if the field's value is a valid datetime (not including timezones), optionally within a range.
+* The datetime string must contain 4 digits for the year, followed by a dash, followed by two month digits, ranging from 01 to 12, followed by a dash, followed by two day digits, ranging from 01 and 31, followed by a space or the letter 'T', followed by 2 digits for the hour ranging from 00 to 23, followed by a colon, followed by 2 minute digits, ranging from 00 to 59, optionally followed by a colon and two seconds digits, ranging from 00 to 59, optionally followed by a period and from one to three digits representing fractional seconds.
+* __The datetime-local input supports both a min and a max datetime. These strings must be valid datetime-local strings.__
+* The datetime-local input also supports a step attribute, which is an integer describing how many seconds one should step.
 *
 * @method checkDatetimelocal
 * @private

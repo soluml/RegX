@@ -149,6 +149,13 @@
                             </li>
                         
                             <li class="index-item method private">
+                                <a href="#method_checkDatetimelocal">checkDatetimelocal</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private">
                                 <a href="#method_checkEmail">checkEmail</a>
 
                                 
@@ -157,6 +164,13 @@
                         
                             <li class="index-item method private">
                                 <a href="#method_checkMaxLength">checkMaxLength</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method private">
+                                <a href="#method_checkMonth">checkMonth</a>
 
                                 
                                 
@@ -353,7 +367,7 @@
             
         
         
-        <a href="..&#x2F;files&#x2F;C:_Users_bens_Documents_GitHub_RegX_RegX.js.html#l520"><code>C:\Users\bens\Documents\GitHub\RegX\RegX.js:520</code></a>
+        <a href="..&#x2F;files&#x2F;C:_Users_bens_Documents_GitHub_RegX_RegX.js.html#l526"><code>C:\Users\bens\Documents\GitHub\RegX\RegX.js:526</code></a>
         
         </p>
 
@@ -368,6 +382,65 @@
 <strong>The input color control shouldn't allow you to set the color to anything BUT a color.</strong>
 In a modern browser, checkValidity() should ALWAYS return true, because the default value for anything other than a valid hex color, is #000000.
 When the setting RegX.USE<em>BETTER</em>VALIDATION is set to true, RegX allows the use of SVG color keywords or simple colors (ex. aliceblue or #f00).</p>
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_checkDatetimelocal" class="method item private">
+    <h3 class="name"><code>checkDatetimelocal</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;C:_Users_bens_Documents_GitHub_RegX_RegX.js.html#l1120"><code>C:\Users\bens\Documents\GitHub\RegX\RegX.js:1120</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>This function checks if the field's value is a valid datetime (not including timezones), optionally within a range.
+The datetime string must contain 4 digits for the year, followed by a dash, followed by two month digits, ranging from 01 to 12, followed by a dash, followed by two day digits, ranging from 01 and 31, followed by a space or the letter 'T', followed by 2 digits for the hour ranging from 00 to 23, followed by a colon, followed by 2 minute digits, ranging from 00 to 59, optionally followed by a colon and two seconds digits, ranging from 00 to 59, optionally followed by a period and from one to three digits representing fractional seconds.
+<strong>The datetime-local input supports both a min and a max datetime. These strings must be valid datetime-local strings.</strong>
+The datetime-local input also supports a step attribute, which is an integer describing how many seconds one should step.</p>
     </div>
 
     
@@ -412,7 +485,7 @@ When the setting RegX.USE<em>BETTER</em>VALIDATION is set to true, RegX allows t
             
         
         
-        <a href="..&#x2F;files&#x2F;C:_Users_bens_Documents_GitHub_RegX_RegX.js.html#l562"><code>C:\Users\bens\Documents\GitHub\RegX\RegX.js:562</code></a>
+        <a href="..&#x2F;files&#x2F;C:_Users_bens_Documents_GitHub_RegX_RegX.js.html#l568"><code>C:\Users\bens\Documents\GitHub\RegX\RegX.js:568</code></a>
         
         </p>
 
@@ -470,7 +543,7 @@ This method can use "Better Validation" based on  Arluison Guillaume's regex.</p
             
         
         
-        <a href="..&#x2F;files&#x2F;C:_Users_bens_Documents_GitHub_RegX_RegX.js.html#l474"><code>C:\Users\bens\Documents\GitHub\RegX\RegX.js:474</code></a>
+        <a href="..&#x2F;files&#x2F;C:_Users_bens_Documents_GitHub_RegX_RegX.js.html#l480"><code>C:\Users\bens\Documents\GitHub\RegX\RegX.js:480</code></a>
         
         </p>
 
@@ -527,7 +600,66 @@ If maxlength is specified as a float, the maxlength value is floored. Maxlength 
             
         
         
-        <a href="..&#x2F;files&#x2F;C:_Users_bens_Documents_GitHub_RegX_RegX.js.html#l905"><code>C:\Users\bens\Documents\GitHub\RegX\RegX.js:905</code></a>
+        <a href="..&#x2F;files&#x2F;C:_Users_bens_Documents_GitHub_RegX_RegX.js.html#l1026"><code>C:\Users\bens\Documents\GitHub\RegX\RegX.js:1026</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>This function checks if the field's value is a valid time, optionally within a range.
+The time string must contain 2 digits for the hour ranging from 00 to 23, followed by a colon, followed by 2 minute digits, ranging from 00 to 59, optionally followed by a colon and two seconds digits, ranging from 00 to 59, optionally followed by a period and from one to three digits representing fractional seconds.
+<strong>The time input supports both a min and a max time. These strings must be valid time strings.</strong>
+The time input also supports a step attribute, which is an integer describing how many seconds one should step.</p>
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_checkMonth" class="method item private">
+    <h3 class="name"><code>checkMonth</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+
+    
+
+    
+        <span class="flag private">private</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;C:_Users_bens_Documents_GitHub_RegX_RegX.js.html#l926"><code>C:\Users\bens\Documents\GitHub\RegX\RegX.js:926</code></a>
         
         </p>
 
@@ -586,7 +718,7 @@ The date input also supports a step attribute, which is an integer describing ho
             
         
         
-        <a href="..&#x2F;files&#x2F;C:_Users_bens_Documents_GitHub_RegX_RegX.js.html#l827"><code>C:\Users\bens\Documents\GitHub\RegX\RegX.js:827</code></a>
+        <a href="..&#x2F;files&#x2F;C:_Users_bens_Documents_GitHub_RegX_RegX.js.html#l839"><code>C:\Users\bens\Documents\GitHub\RegX\RegX.js:839</code></a>
         
         </p>
 
@@ -645,7 +777,7 @@ The month input also supports a step attribute, which is an integer describing h
             
         
         
-        <a href="..&#x2F;files&#x2F;C:_Users_bens_Documents_GitHub_RegX_RegX.js.html#l616"><code>C:\Users\bens\Documents\GitHub\RegX\RegX.js:616</code></a>
+        <a href="..&#x2F;files&#x2F;C:_Users_bens_Documents_GitHub_RegX_RegX.js.html#l622"><code>C:\Users\bens\Documents\GitHub\RegX\RegX.js:622</code></a>
         
         </p>
 
@@ -702,7 +834,7 @@ Specify the min, max, and step to control which numbers are available.</p>
             
         
         
-        <a href="..&#x2F;files&#x2F;C:_Users_bens_Documents_GitHub_RegX_RegX.js.html#l460"><code>C:\Users\bens\Documents\GitHub\RegX\RegX.js:460</code></a>
+        <a href="..&#x2F;files&#x2F;C:_Users_bens_Documents_GitHub_RegX_RegX.js.html#l466"><code>C:\Users\bens\Documents\GitHub\RegX\RegX.js:466</code></a>
         
         </p>
 
@@ -759,7 +891,7 @@ If specified, the attribute's value must match the JavaScript Pattern production
             
         
         
-        <a href="..&#x2F;files&#x2F;C:_Users_bens_Documents_GitHub_RegX_RegX.js.html#l702"><code>C:\Users\bens\Documents\GitHub\RegX\RegX.js:702</code></a>
+        <a href="..&#x2F;files&#x2F;C:_Users_bens_Documents_GitHub_RegX_RegX.js.html#l708"><code>C:\Users\bens\Documents\GitHub\RegX\RegX.js:708</code></a>
         
         </p>
 
@@ -818,7 +950,7 @@ However, when USE<em>BETTER</em>VALIDATION is true, we treat range like a number
             
         
         
-        <a href="..&#x2F;files&#x2F;C:_Users_bens_Documents_GitHub_RegX_RegX.js.html#l423"><code>C:\Users\bens\Documents\GitHub\RegX\RegX.js:423</code></a>
+        <a href="..&#x2F;files&#x2F;C:_Users_bens_Documents_GitHub_RegX_RegX.js.html#l429"><code>C:\Users\bens\Documents\GitHub\RegX\RegX.js:429</code></a>
         
         </p>
 
@@ -874,7 +1006,7 @@ However, when USE<em>BETTER</em>VALIDATION is true, we treat range like a number
             
         
         
-        <a href="..&#x2F;files&#x2F;C:_Users_bens_Documents_GitHub_RegX_RegX.js.html#l488"><code>C:\Users\bens\Documents\GitHub\RegX\RegX.js:488</code></a>
+        <a href="..&#x2F;files&#x2F;C:_Users_bens_Documents_GitHub_RegX_RegX.js.html#l494"><code>C:\Users\bens\Documents\GitHub\RegX\RegX.js:494</code></a>
         
         </p>
 
@@ -930,7 +1062,7 @@ However, when USE<em>BETTER</em>VALIDATION is true, we treat range like a number
             
         
         
-        <a href="..&#x2F;files&#x2F;C:_Users_bens_Documents_GitHub_RegX_RegX.js.html#l586"><code>C:\Users\bens\Documents\GitHub\RegX\RegX.js:586</code></a>
+        <a href="..&#x2F;files&#x2F;C:_Users_bens_Documents_GitHub_RegX_RegX.js.html#l592"><code>C:\Users\bens\Documents\GitHub\RegX\RegX.js:592</code></a>
         
         </p>
 
@@ -1126,7 +1258,7 @@ If you want to match an input's value, irregardless of whether it's immutable, u
             
         
         
-        <a href="..&#x2F;files&#x2F;C:_Users_bens_Documents_GitHub_RegX_RegX.js.html#l725"><code>C:\Users\bens\Documents\GitHub\RegX\RegX.js:725</code></a>
+        <a href="..&#x2F;files&#x2F;C:_Users_bens_Documents_GitHub_RegX_RegX.js.html#l731"><code>C:\Users\bens\Documents\GitHub\RegX\RegX.js:731</code></a>
         
         </p>
 

@@ -200,7 +200,7 @@
         },
         {
             "file": "C:\\Users\\bens\\Documents\\GitHub\\RegX\\RegX.js",
-            "line": 423,
+            "line": 429,
             "description": "This function checks if the field is valid, assuming that the field IS required and only observing that fact.",
             "itemtype": "method",
             "name": "checkRequired",
@@ -211,7 +211,7 @@
         },
         {
             "file": "C:\\Users\\bens\\Documents\\GitHub\\RegX\\RegX.js",
-            "line": 460,
+            "line": 466,
             "description": "This function checks if the field is valid based on it's pattern attribute. __If no pattern attribute is supplied, this method returns false!__\nIf specified, the attribute's value must match the JavaScript Pattern production ([ECMA262]). The pattern is compiled with the \"global, ignoreCase, and multiline flags disabled\".",
             "itemtype": "method",
             "name": "checkPattern",
@@ -222,7 +222,7 @@
         },
         {
             "file": "C:\\Users\\bens\\Documents\\GitHub\\RegX\\RegX.js",
-            "line": 474,
+            "line": 480,
             "description": "This function checks if the field's value exceeds the max length based on it's maxlength attribute. __If no maxlength attribute is supplied, this method returns false!__\nIf maxlength is specified as a float, the maxlength value is floored. Maxlength value must be a number >= 0 or else this property is effectively ignored.",
             "itemtype": "method",
             "name": "checkMaxLength",
@@ -233,7 +233,7 @@
         },
         {
             "file": "C:\\Users\\bens\\Documents\\GitHub\\RegX\\RegX.js",
-            "line": 488,
+            "line": 494,
             "description": "This function checks selects in more detail for various browsers.",
             "itemtype": "method",
             "name": "checkSelect",
@@ -244,7 +244,7 @@
         },
         {
             "file": "C:\\Users\\bens\\Documents\\GitHub\\RegX\\RegX.js",
-            "line": 520,
+            "line": 526,
             "description": "This function checks if the field's value is a valid color.\n__The input color control shouldn't allow you to set the color to anything BUT a color.__\nIn a modern browser, checkValidity() should ALWAYS return true, because the default value for anything other than a valid hex color, is #000000.\nWhen the setting RegX.USE_BETTER_VALIDATION is set to true, RegX allows the use of SVG color keywords or simple colors (ex. aliceblue or #f00).",
             "itemtype": "method",
             "name": "checkColor",
@@ -255,7 +255,7 @@
         },
         {
             "file": "C:\\Users\\bens\\Documents\\GitHub\\RegX\\RegX.js",
-            "line": 562,
+            "line": 568,
             "description": "This function checks if the field's value is a valid email address.\nSpec: http://www.w3.org/TR/html5/states-of-the-type-attribute.html#e-mail-state-type-email\nThis method can use \"Better Validation\" based on  Arluison Guillaume's regex.",
             "itemtype": "method",
             "name": "checkEmail",
@@ -266,7 +266,7 @@
         },
         {
             "file": "C:\\Users\\bens\\Documents\\GitHub\\RegX\\RegX.js",
-            "line": 586,
+            "line": 592,
             "description": "This function checks if the field's value is a valid URL.\nSpec: http://www.w3.org/TR/html5/states-of-the-type-attribute.html#url-state-type-url\nhttp://tools.ietf.org/html/rfc3986#section-3 - URI Must have a Scheme:\n\tScheme = ALPHA *( ALPHA / DIGIT / \"+\" / \"-\" / \".\" )\nThis method can use \"Better Validation\" to do deeper checking for ftp and http/https (as Chrome does).",
             "itemtype": "method",
             "name": "checkURL",
@@ -277,7 +277,7 @@
         },
         {
             "file": "C:\\Users\\bens\\Documents\\GitHub\\RegX\\RegX.js",
-            "line": 616,
+            "line": 622,
             "description": "This function checks if the field's value is a valid number.\nSpecify the min, max, and step to control which numbers are available.",
             "itemtype": "method",
             "name": "checkNumber",
@@ -288,7 +288,7 @@
         },
         {
             "file": "C:\\Users\\bens\\Documents\\GitHub\\RegX\\RegX.js",
-            "line": 702,
+            "line": 708,
             "description": "This function checks if the field's value is a valid number within a range.\nThe range input seems to be a different GUI on top of the number input type. If you look at the spec for input range, no matter what value you set, the browser should auto correct it for you.\n__Since the spec assumes always valid (unless somehow, you pass in a \"NaN\"), RegX assumes always valid (unless somehow, you pass in a \"NaN\").__ The control will literally not allow you to move outside the range.\nHowever, when USE_BETTER_VALIDATION is true, we treat range like a number and assume that it should be validated the same way.",
             "itemtype": "method",
             "name": "checkRange",
@@ -299,7 +299,7 @@
         },
         {
             "file": "C:\\Users\\bens\\Documents\\GitHub\\RegX\\RegX.js",
-            "line": 725,
+            "line": 731,
             "description": "This function checks if the field's value is a valid week, optionally within a range.\nThe week string must contain 4 digits for the year, followed by a dash, followed by a capital W, followed by two week digits, ranging from 01 to 53.\n__The week input supports both a min and a max week. These strings must be valid week strings.__\nThe week input also supports a step attribute, which is an integer describing how many weeks one should step.",
             "itemtype": "method",
             "name": "checkWeek",
@@ -310,7 +310,7 @@
         },
         {
             "file": "C:\\Users\\bens\\Documents\\GitHub\\RegX\\RegX.js",
-            "line": 827,
+            "line": 839,
             "description": "This function checks if the field's value is a valid month, optionally within a range.\nThe month string must contain 4 digits for the year, followed by a dash, followed by two month digits, ranging from 01 to 12.\n__The month input supports both a min and a max month. These strings must be valid month strings.__\nThe month input also supports a step attribute, which is an integer describing how many months one should step.",
             "itemtype": "method",
             "name": "checkMonth",
@@ -321,7 +321,7 @@
         },
         {
             "file": "C:\\Users\\bens\\Documents\\GitHub\\RegX\\RegX.js",
-            "line": 905,
+            "line": 926,
             "description": "This function checks if the field's value is a valid date, optionally within a range.\nThe date string must contain 4 digits for the year, followed by a dash, followed by two month digits, ranging from 01 to 12, followed by a dash, followed by two day digits, ranging from 01 and 31.\n__The date input supports both a min and a max date. These strings must be valid date strings.__\nThe date input also supports a step attribute, which is an integer describing how many days one should step.",
             "itemtype": "method",
             "name": "checkMonth",
@@ -332,13 +332,35 @@
         },
         {
             "file": "C:\\Users\\bens\\Documents\\GitHub\\RegX\\RegX.js",
-            "line": 1147,
+            "line": 1026,
+            "description": "This function checks if the field's value is a valid time, optionally within a range.\nThe time string must contain 2 digits for the hour ranging from 00 to 23, followed by a colon, followed by 2 minute digits, ranging from 00 to 59, optionally followed by a colon and two seconds digits, ranging from 00 to 59, optionally followed by a period and from one to three digits representing fractional seconds.\n__The time input supports both a min and a max time. These strings must be valid time strings.__\nThe time input also supports a step attribute, which is an integer describing how many seconds one should step.",
+            "itemtype": "method",
+            "name": "checkMonth",
+            "access": "private",
+            "tagname": "",
             "class": "RegX",
             "module": "RegX"
         },
         {
             "file": "C:\\Users\\bens\\Documents\\GitHub\\RegX\\RegX.js",
-            "line": 1189,
+            "line": 1120,
+            "description": "This function checks if the field's value is a valid datetime (not including timezones), optionally within a range.\nThe datetime string must contain 4 digits for the year, followed by a dash, followed by two month digits, ranging from 01 to 12, followed by a dash, followed by two day digits, ranging from 01 and 31, followed by a space or the letter 'T', followed by 2 digits for the hour ranging from 00 to 23, followed by a colon, followed by 2 minute digits, ranging from 00 to 59, optionally followed by a colon and two seconds digits, ranging from 00 to 59, optionally followed by a period and from one to three digits representing fractional seconds.\n__The datetime-local input supports both a min and a max datetime. These strings must be valid datetime-local strings.__\nThe datetime-local input also supports a step attribute, which is an integer describing how many seconds one should step.",
+            "itemtype": "method",
+            "name": "checkDatetimelocal",
+            "access": "private",
+            "tagname": "",
+            "class": "RegX",
+            "module": "RegX"
+        },
+        {
+            "file": "C:\\Users\\bens\\Documents\\GitHub\\RegX\\RegX.js",
+            "line": 1384,
+            "class": "RegX",
+            "module": "RegX"
+        },
+        {
+            "file": "C:\\Users\\bens\\Documents\\GitHub\\RegX\\RegX.js",
+            "line": 1426,
             "class": "RegX",
             "module": "RegX"
         }
@@ -346,11 +368,11 @@
     "warnings": [
         {
             "message": "Missing item type",
-            "line": " C:\\Users\\bens\\Documents\\GitHub\\RegX\\RegX.js:1147"
+            "line": " C:\\Users\\bens\\Documents\\GitHub\\RegX\\RegX.js:1384"
         },
         {
             "message": "Missing item type",
-            "line": " C:\\Users\\bens\\Documents\\GitHub\\RegX\\RegX.js:1189"
+            "line": " C:\\Users\\bens\\Documents\\GitHub\\RegX\\RegX.js:1426"
         }
     ]
 }
