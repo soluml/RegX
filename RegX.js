@@ -380,7 +380,7 @@ RegX.checkValidity = function($elem, returnError) {
 				break;
 			case 'datetime-local':
 				if(!readonly && (required || val.length > 0)){
-					try{ checkDatetime-local($elem); }
+					try{ checkDatetimelocal($elem); }
 					catch(e){ return formatError(e); }
 				}
 				return true;
@@ -789,7 +789,7 @@ function checkWeek($input){ //YYYY-"W"WW
 			//If val is present, it is the basestep unless min is present.
 			//If min is present, it is the basestep.
 			if(spanWeeks(basestep, val) % step !== 0){
-				throw {type: 'stepMismatch', msg: 'This week date is not a valid step ('+step+') of the base week date ('+pad(4, basestep[0])+'-'+pad(2, basestep[1])+').'};
+				throw {type: 'stepMismatch', msg: 'This week date is not a valid step ('+step+' weeks) of the base week date ('+pad(4, basestep[0])+'-'+pad(2, basestep[1])+').'};
 			}
 		}
 
@@ -899,7 +899,7 @@ function checkMonth($input){ //YYYY-MM
 			//If max is present, it is the basestep unless min is present.
 			//If min is present, it is the basestep.
 			if(spanMonths(basestep, val) % step !== 0){
-				throw {type: 'stepMismatch', msg: 'This month is not a valid step ('+step+') of the base month ('+pad(4, basestep[0])+'-'+pad(2, basestep[1])+').'};
+				throw {type: 'stepMismatch', msg: 'This month is not a valid step ('+step+' months) of the base month ('+pad(4, basestep[0])+'-'+pad(2, basestep[1])+').'};
 			}
 		}
 
@@ -989,7 +989,7 @@ function checkDate($input){ //YYYY-MM-DD
 			//If max is present, it is the basestep unless min is present.
 			//If min is present, it is the basestep.
 			if(spanDays(basestep, val) % step !== 0){
-				throw {type: 'stepMismatch', msg: 'This date is not a valid step ('+step+') of the base date ('+pad(4, basestep[0])+'-'+pad(2, basestep[1])+'-'+pad(2, basestep[2])+').'};
+				throw {type: 'stepMismatch', msg: 'This date is not a valid step ('+step+' days) of the base date ('+pad(4, basestep[0])+'-'+pad(2, basestep[1])+'-'+pad(2, basestep[2])+').'};
 			}
 		}
 		
@@ -1087,7 +1087,7 @@ function checkTime($input){ //HH:MM{:SS{.F{F{F}}}}
 			
 			//Basestep is the value unless the min is present.
 			if(spanTime(basestep, val) % step !== 0){
-				throw {type: 'stepMismatch', msg: 'This time is not a valid step ('+step+') of the base time ('+pad(2, basestep[0])+':'+pad(2, basestep[1])+':'+pad(2, basestep[2])+'.'+pad(3, basestep[3], true)+').'};
+				throw {type: 'stepMismatch', msg: 'This time is not a valid step ('+step+' seconds) of the base time ('+pad(2, basestep[0])+':'+pad(2, basestep[1])+':'+pad(2, basestep[2])+'.'+pad(3, basestep[3], true)+').'};
 			}
 			
 		}
@@ -1117,8 +1117,17 @@ function gregorianTime(val){
 	return [hour,minute,second,fraction];
 }
 
+/**
+* This function checks if the field's value is a valid datetime, optionally within a range.
 
-function checkDatetimelocal(){ //YYYY-MM-DD HH:MM(:SS{:F{F{F}}}) or YYYY-MM-DD"T"HH:MM(:SS{:F{F{F}}})
+* The time string must contain 2 digits for the hour ranging from 00 to 23, followed by a colon, followed by 2 minute digits, ranging from 00 to 59, optionally followed by a colon and two seconds digits, ranging from 00 to 59, optionally followed by a period and from one to three digits representing fractional seconds.
+* __The time input supports both a min and a max time. These strings must be valid time strings.__
+* The time input also supports a step attribute, which is an integer describing how many seconds one should step.
+*
+* @method checkDatetimelocal
+* @private
+*/
+function checkDatetimelocal($input){ //YYYY-MM-DD HH:MM(:SS{:F{F{F}}}) or YYYY-MM-DD"T"HH:MM(:SS{:F{F{F}}})
 	if($input.selector !== undefined) $input = $input[0];
 	
 	var val          = $input.value,
@@ -1126,8 +1135,8 @@ function checkDatetimelocal(){ //YYYY-MM-DD HH:MM(:SS{:F{F{F}}}) or YYYY-MM-DD"T
 	    min          = attr($input, 'min'),
 		step         = attr($input, 'step'),
 		defaultstep  = 60, //Default step is 60 seconds
-		basestep,
-		regex = /^(\d{4})\-(\d{2})\-(\d{2})( |T)(\d{2}):(\d{2})(:(\d{2})(\.(\d{1,3}))?)?$/,
+		basestep     = attr($input, 'value'),
+		regex        = /^(\d{4})\-(\d{2})\-(\d{2})( |T)(\d{2}):(\d{2})(:(\d{2})(\.(\d{1,3}))?)?$/,
 		tDate;
 					
 	if(USE_SANITATION) {
@@ -1135,9 +1144,87 @@ function checkDatetimelocal(){ //YYYY-MM-DD HH:MM(:SS{:F{F{F}}}) or YYYY-MM-DD"T
 		if(max) max = trim(max);
 		if(min) min = trim(min);
 		if(step) step = trim(step);
+		if(basestep) basestep = trim(basestep);
+	}
+	
+	if(!regex.test(val)){ throw {type: 'typeMismatch', msg: 'This is not a valid datetime-local string. e.g. "YYYY-MM-DD HH:MM:SS.FFF" or "YYYY-MM-DD\'T\'HH:MM:SS.FFF"'}; }
+	
+	val = gregorianDateTimeLocal(val.match(regex));
+
+	if(val && val.length === 7) {
+		tDate = new Date(val[0],(val[1]-1),val[2],val[3],val[4],val[5],val[6]).getTime();
+	
+		//Check Max Time
+		if(regex.test(max)) {
+			max = gregorianDateTimeLocal(max.match(regex));
+			if((max && max.length === 7) && (new Date(max[0],(max[1]-1),max[2],max[3],max[4],max[5],max[6]).getTime() < tDate)){
+				throw {type: 'rangeOverflow', msg: 'This date is past the maximum datetime ('+pad(4, max[0])+'-'+pad(2, max[1])+'-'+pad(2, max[2])+' '+pad(2, max[3])+':'+pad(2, max[4])+':'+pad(2, max[5])+'.'+pad(3, max[6], true)+').'};
+			}
+		}
+		
+		//Check Min Date
+		if(regex.test(min)) {
+			min = gregorianDateTimeLocal(min.match(regex));
+			if((min && min.length === 7) && (new Date(min[0],(min[1]-1),min[2],min[3],min[4],min[5],min[6]).getTime() > tDate)){
+				throw {type: 'rangeUnderflow', msg: 'This time is sooner than the minimum datetime ('+pad(4, min[0])+'-'+pad(2, min[1])+'-'+pad(2, min[2])+' '+pad(2, min[3])+':'+pad(2, min[4])+':'+pad(2, min[5])+'.'+pad(3, min[6], true)+').'};
+			}
+			basestep = min;
+		} else{
+			//If no min, do basestep
+			//Base step in this case should be the value attr if it was set, otherwise zero it out.
+			basestep = (regex.test(basestep) ? gregorianDateTimeLocal(basestep.match(regex)) : [1970,0,1,0,0,0,0]);
+			if(basestep === false){ basestep = [1970,0,1,0,0,0,0]; }
+		}
+		
+		//Check Step
+		if(step !== 'any'){
+			if(!/^\d+$/.test(step)){ step = defaultstep; }
+			else { step = parseInt(step, 10); }
+			
+			//Basestep is the value unless the min is present.
+			if(spanDateTimeLocal(basestep, val) % step !== 0){
+				throw {type: 'stepMismatch', msg: 'This time is not a valid step ('+step+' seconds) of the base datetime ('+pad(4, basestep[0])+'-'+pad(2, basestep[1])+'-'+pad(2, basestep[2])+' '+pad(2, basestep[3])+':'+pad(2, basestep[4])+':'+pad(2, basestep[5])+'.'+pad(3, basestep[6], true)+').'};
+			}
+			
+		}
+
+		return;
+	}
+
+	throw {type: 'typeMismatch', msg: 'This is not a valid datetime-local string. e.g. "YYYY-MM-DD HH:MM:SS.FFF" or "YYYY-MM-DD\'T\'HH:MM:SS.FFF"'};
+	
+	function spanDateTimeLocal(base, val){
+		//Determine amount of time in between span of times
+		//1000 = milliseconds in a second.
+		return (new Date(base[0],(base[1]-1),base[2],base[3],base[4],base[5],base[6]).getTime() - new Date(val[0],(val[1]-1),val[2],val[3],val[4],val[5],val[6]).getTime()) / 1000;
 	}
 }
-
+function gregorianDateTimeLocal(val){
+	var year,
+		month,
+		day,
+		hour,
+		minute,
+		second,
+		fraction,
+		valt = gregorianDate(val);
+	
+	//Check to see if date string is valid.
+	if(!valt) { return false; }
+	year = valt[0];
+	month = valt[1];
+	day = valt[2];
+	
+	//Check to see if time string is valid.
+	valt = gregorianTime(val.slice(4));
+	if(!valt) { return false; }
+	hour = valt[0];
+	minute = valt[1];
+	second = valt[2];
+	fraction = valt[3];
+	
+	return [year,month,day,hour,minute,second,fraction];
+}
 
 
 
