@@ -385,18 +385,13 @@ RegX.checkValidity = function($elem, returnError) {
 				}
 				return true;
 				break;
-				
-				
-				
-				
-				
-				
-			/*
 			case 'datetime':
-				if(!readonly && (required || val.length > 0)){ return !this.validateDateTime($elem); }
+				if(!readonly && (required || val.length > 0)){
+					try{ checkDatetime($elem); }
+					catch(e){ return formatError(e); }
+				}
 				return true;
 				break;
-			*/
 			case 'checkbox':
 			case 'radio':
 			case 'file':
@@ -1225,11 +1220,108 @@ function gregorianDateTimeLocal(val){
 	return [year,month,day,hour,minute,second,fraction];
 }
 
+/**
+* This function checks if the field's value is a valid datetime (including timezones), optionally within a range.
+* The datetime string must contain 4 digits for the year, followed by a dash, followed by two month digits, ranging from 01 to 12, followed by a dash, followed by two day digits, ranging from 01 and 31, followed by a space or the letter 'T', followed by 2 digits for the hour ranging from 00 to 23, followed by a colon, followed by 2 minute digits, ranging from 00 to 59, optionally followed by a colon and two seconds digits, ranging from 00 to 59, optionally followed by a period and from one to three digits representing fractional seconds, followed by a UTC timezone, which can be expressed by the letter 'Z' or a +/- symbol followed by 2 digits for an hour offset followed by 2 digits for a minute offset.
+* __The datetime input supports both a min and a max datetime. These strings must be valid datetime strings.__
+* The datetime input also supports a step attribute, which is an integer describing how many seconds one should step.
+*
+* @method checkDatetime
+* @private
+*/
+
+
+function checkDatetime($input){//YYYY-MM-DD HH:MM(:SS{:F{F{F}}})Z|[+-]HH:MM or YYYY-MM-DD"T"HH:MM(:SS{:F{F{F}}})Z|[+-]HH:MM
+	if($input.selector !== undefined) $input = $input[0];
+	
+	var val          = $input.value,
+	    max          = attr($input, 'max'),
+	    min          = attr($input, 'min'),
+		step         = attr($input, 'step'),
+		defaultstep  = 60, //Default step is 60 seconds
+		basestep     = attr($input, 'value'),
+		regex        = /^(\d{4})\-(\d{2})\-(\d{2})( |T)(\d{2}):(\d{2})(:(\d{2})(\.(\d{1,3}))?)?(Z|(([+\-])(\d{2}):(\d{2})))$/,
+		tDate;
+					
+	if(USE_SANITATION) {
+		val = trim(val);
+		if(max) max = trim(max);
+		if(min) min = trim(min);
+		if(step) step = trim(step);
+		if(basestep) basestep = trim(basestep);
+	}
+	
+	if(!regex.test(val)){ throw {type: 'typeMismatch', msg: 'This is not a valid datetime string. e.g. "YYYY-MM-DD HH:MM:SS.FFF\'Z\'" or "YYYY-MM-DD\'T\'HH:MM:SS.FFF[+/-]HH:MM"'}; }
+	
+	val = gregorianDateTime(val.match(regex));
+
+	if(val && val.length === 9) {
+		
+		throw {msg: 'success'};
+		
+		
+	}
 
 
 
+	throw {type: 'typeMismatch', msg: 'This is not a valid datetime string. e.g. "YYYY-MM-DD HH:MM:SS.FFF\'Z\'" or "YYYY-MM-DD\'T\'HH:MM:SS.FFF[+/-]HH:MM"'};	
+}
+function gregorianDateTime(val){
+	var year,
+		month,
+		day,
+		hour,
+		minute,
+		second,
+		fraction,
+		thour,
+		tminute,
+		valt = gregorianDateTimeLocal(val);
+	
+	//Check to see if datetime-local string is valid.
+	if(!valt) { return false; }
+	year = valt[0];
+	month = valt[1];
+	day = valt[2];
+	hour = valt[3];
+	minute = valt[4];
+	second = valt[5];
+	fraction = valt[6];
+	
+	//If Z, timezone is UTC +00:00
+	if(val[11] == 'Z'){
+		thour = 0;
+		tminute = 0;
+	} else {
+		thour = parseInt(val[13]+val[14],10);
+		tminute = parseInt(pad(2, val[15]),10);
 
-
+		//If better validation, check to see if the timezone is real.
+		if(USE_BETTER_VALIDATION){
+			//Range of offsets of actual time zones is -12:00 to +14:00
+			//Possible Values of UTC Time Offsets:  -12, -11, -10, -9:30, -9, -8, -7, -6, -5, -4:30, -4, -3:30, -3, -2, -1, 0 or 'Z', +1, +2, +3, +3:30, +4, +4:30, +5, +5:30, +5:45, +6, +6:30, +7, +8, +8:45, +9, +9:30, +10, +10:30, +11, +11:30, +12, +12:45, +13, +14
+			
+			switch(tminute){
+				case 0:
+					if(thour < -12 || thour > 14){ return false; }
+					break;
+				case 30:
+					if(Math.abs(thour) !== 4 && Math.abs(thour) !== 3 && Math.abs(thour) !== 9 && thour !== 5 && thour !== 6 && thour !== 10 && thour !== 11){
+						return false;
+					}
+					break;
+				case 45:
+					if(thour !== 5 && thour !== 8 && thour !== 12){ return false; }
+					break;
+				default:
+					return false;
+					break;
+			}
+		}
+	}
+	
+	return [year,month,day,hour,minute,second,fraction,tsign,thour,tminute];	
+}
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // RegX Private Parts //////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
