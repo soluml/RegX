@@ -1255,16 +1255,49 @@ function checkDatetime($input){//YYYY-MM-DD HH:MM(:SS{:F{F{F}}})Z|[+-]HH:MM or Y
 	
 	val = gregorianDateTime(val.match(regex));
 
-	if(val && val.length === 9) {
+	if(val && val.length === 10) {
+		tDate = new Date(val[0],(val[1]-1),val[2],val[3],val[4],val[5],val[6]).getTime() + timezoneToMilli(val[7],val[8],val[9]);
+	
+		//Check Max Time
+		if(regex.test(max)) {
+			max = gregorianDateTime(max.match(regex));
+			if((max && max.length === 9) && (new Date(max[0],(max[1]-1),max[2],max[3],max[4],max[5],max[6]).getTime() + timezoneToMilli(max[7],max[8],max[9]) < tDate)){
+				throw {type: 'rangeOverflow', msg: 'This date is past the maximum datetime ('+pad(4, max[0])+'-'+pad(2, max[1])+'-'+pad(2, max[2])+' '+pad(2, max[3])+':'+pad(2, max[4])+':'+pad(2, max[5])+'.'+pad(3, max[6], true)+max[9]+pad(2, max[7])+':'+pad(2, max[8])+').'};
+			}
+		}
+
 		
-		throw {msg: 'success'};
 		
 		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		return;	
 	}
 
-
-
-	throw {type: 'typeMismatch', msg: 'This is not a valid datetime string. e.g. "YYYY-MM-DD HH:MM:SS.FFF\'Z\'" or "YYYY-MM-DD\'T\'HH:MM:SS.FFF[+/-]HH:MM"'};	
+	throw {type: 'typeMismatch', msg: 'This is not a valid datetime string. e.g. "YYYY-MM-DD HH:MM:SS.FFF\'Z\'" or "YYYY-MM-DD\'T\'HH:MM:SS.FFF[+/-]HH:MM"'};
+	
+	function timezoneToMilli(h,m,s){
+		//3600000 milliseconds in hour
+		//60000 milliseconds in a minute
+		return (h * 3600000) + parseInt(s+(m*60000),10);
+	}
 }
 function gregorianDateTime(val){
 	var year,
@@ -1274,6 +1307,7 @@ function gregorianDateTime(val){
 		minute,
 		second,
 		fraction,
+		tsign,
 		thour,
 		tminute,
 		valt = gregorianDateTimeLocal(val);
@@ -1290,9 +1324,11 @@ function gregorianDateTime(val){
 	
 	//If Z, timezone is UTC +00:00
 	if(val[11] == 'Z'){
+		tsign = '+';
 		thour = 0;
 		tminute = 0;
 	} else {
+		tsign = val[13];
 		thour = parseInt(val[13]+val[14],10);
 		tminute = parseInt(pad(2, val[15]),10);
 
@@ -1320,7 +1356,7 @@ function gregorianDateTime(val){
 		}
 	}
 	
-	return [year,month,day,hour,minute,second,fraction,tsign,thour,tminute];	
+	return [year,month,day,hour,minute,second,fraction,thour,tminute,tsign];	
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // RegX Private Parts //////////////////////////////////////////////////////////////////////////////////////////////////////////
