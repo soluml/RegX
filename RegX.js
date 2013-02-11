@@ -7,7 +7,7 @@
 * Released under the Creative Commons Attribution-ShareAlike (CC BY-SA) License.
 *
 * author:  Benjamin Solum
-* version: 0.4
+* version: 0.5
 * url:     http://www.soluml.com/RegX/
 * source:  https://regx.github.com/
 * @module RegX
@@ -1476,8 +1476,9 @@ function addEvent(obj, type, fn){
     obj['e'+type+fn] = fn;
     obj[type+fn] = function(){obj['e'+type+fn]( window.event );}
     obj.attachEvent( 'on'+type, obj[type+fn] );
-  } else
+  } else {
     obj.addEventListener(type, fn, false);
+  }
 }
 //Remove event handlers
 function removeEvent(obj, type, fn){
@@ -1487,16 +1488,15 @@ function removeEvent(obj, type, fn){
 		obj.detachEvent('on'+type, obj[type+fn]);
 	}
     obj[type+fn] = null;
-  } else
+  } else {
     obj.removeEventListener(type, fn, false);
+  }
 }
 //Protects any previously specified onload events 
 function wOL(f1, f2){
     return function(){
-        if(f1)
-			f1();
-        if(f2)
-			f2();
+        if(f1){ f1(); }
+        if(f2){ f2(); }
     }
 }
 window.onload = wOL(window.onload, RegX.init);
