@@ -1261,32 +1261,36 @@ function checkDatetime($input){//YYYY-MM-DD HH:MM(:SS{:F{F{F}}})Z|[+-]HH:MM or Y
 		//Check Max Time
 		if(regex.test(max)) {
 			max = gregorianDateTime(max.match(regex));
-			if((max && max.length === 9) && (new Date(max[0],(max[1]-1),max[2],max[3],max[4],max[5],max[6]).getTime() + timezoneToMilli(max[7],max[8],max[9]) < tDate)){
+			if((max && max.length === 10) && (new Date(max[0],(max[1]-1),max[2],max[3],max[4],max[5],max[6]).getTime() + timezoneToMilli(max[7],max[8],max[9]) < tDate)){
 				throw {type: 'rangeOverflow', msg: 'This date is past the maximum datetime ('+pad(4, max[0])+'-'+pad(2, max[1])+'-'+pad(2, max[2])+' '+pad(2, max[3])+':'+pad(2, max[4])+':'+pad(2, max[5])+'.'+pad(3, max[6], true)+max[9]+pad(2, max[7])+':'+pad(2, max[8])+').'};
 			}
 		}
 
+		//Check Min Date
+		if(regex.test(min)) {
+			min = gregorianDateTime(min.match(regex));
+			if((min && min.length === 10) && (new Date(min[0],(min[1]-1),min[2],min[3],min[4],min[5],min[6]).getTime() + timezoneToMilli(min[7],min[8],min[9]) > tDate)){
+				throw {type: 'rangeUnderflow', msg: 'This time is sooner than the minimum datetime ('+pad(4, min[0])+'-'+pad(2, min[1])+'-'+pad(2, min[2])+' '+pad(2, min[3])+':'+pad(2, min[4])+':'+pad(2, min[5])+'.'+pad(3, min[6], true)+min[9]+pad(2, min[7])+':'+pad(2, min[8])+').'};
+			}
+			basestep = min;
+		} else{
+			//If no min, do basestep
+			//Base step in this case should be the value attr if it was set, otherwise zero it out.
+			basestep = (regex.test(basestep) ? gregorianDateTime(basestep.match(regex)) : [1970,0,1,0,0,0,0,0,0,'+']);
+			if(basestep === false){ basestep = [1970,0,1,0,0,0,0,0,0,'+']; }
+		}
 		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
+		//Check Step
+		if(step !== 'any'){
+			if(!/^\d+$/.test(step)){ step = defaultstep; }
+			else { step = parseInt(step, 10); }
+			
+			//Basestep is the value unless the min is present.
+			if(spanDateTime(basestep, val) % step !== 0){
+				throw {type: 'stepMismatch', msg: 'This time is not a valid step ('+step+' seconds) of the base datetime ('+pad(4, basestep[0])+'-'+pad(2, basestep[1])+'-'+pad(2, basestep[2])+' '+pad(2, basestep[3])+':'+pad(2, basestep[4])+':'+pad(2, basestep[5])+'.'+pad(3, basestep[6], true)+basestep[9]+pad(2, basestep[7])+':'+pad(2, basestep[8])+').'};
+			}
+			
+		}
 		
 		return;	
 	}
@@ -1297,6 +1301,11 @@ function checkDatetime($input){//YYYY-MM-DD HH:MM(:SS{:F{F{F}}})Z|[+-]HH:MM or Y
 		//3600000 milliseconds in hour
 		//60000 milliseconds in a minute
 		return (h * 3600000) + parseInt(s+(m*60000),10);
+	}
+	function spanDateTime(base, val){
+		//Determine amount of time in between span of times
+		//1000 = milliseconds in a second.
+		return (new Date(base[0],(base[1]-1),base[2],base[3],base[4],base[5],base[6]).getTime() + timezoneToMilli(base[7],base[8],base[9]) - new Date(val[0],(val[1]-1),val[2],val[3],val[4],val[5],val[6]).getTime() + timezoneToMilli(val[7],val[8],val[9])) / 1000;
 	}
 }
 function gregorianDateTime(val){
