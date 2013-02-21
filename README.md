@@ -10,8 +10,8 @@ RegX is under active development so if a feature is not yet available, **please 
 
 The RegX package currently comes with 1 file plus a README:
 
-1. **RegX.js** - This is main class. It performs JS validation in absence of native HTML5 validation and returns JS error objects (if there are errors).
----
+1. **RegX.js** - This is the main class. It performs JS validation in absence of native HTML5 validation and returns JS error objects (if there are errors).
+
 A codepen for a quick start is available here: [http://codepen.io/soluml/pen/lgcne](http://codepen.io/soluml/pen/lgcne)
 
 If you'd like to quickly include RegX.js in a project, use this link (if you like, be sure to download it): [http://regx.github.com/RegX.js](http://regx.github.com/RegX.js)
